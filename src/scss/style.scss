@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .line{
-    @apply h-0.5 bg-black absolute ;
+    @apply h-0.5 bg-black absolute z-40 ;
     transform-origin: top left;
 
 }
@@ -12,4 +12,11 @@
 }
 .btnActive{
     @apply text-blue-500 border-blue-400;
+}
+.sidebar{
+    @apply w-60 text-base shadow-lg h-full shrink-0 bg-[#0f4068] text-white;
+
+    .menuItem{
+        @apply cursor-pointer w-full px-4 py-3 flex items-center justify-between text-base shadow-sm border-b  border-gray-300 font-medium hover:text-[#0f4068] hover:bg-white ;
+    }
 }

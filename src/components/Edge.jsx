@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 
-function Edge({ data }) {
-    const {u,v}=data;
+function Edge({ data ,vertexList}) {
+    const {u,v,v_temp}=data;
+    let u_point=vertexList[u];
+    let v_point= v_temp?v_temp:vertexList[v];
     // const u = {
     //     x: 100,
     //     y: 200
@@ -12,18 +14,18 @@ function Edge({ data }) {
     // }
     const [lineData, setlineData] = useState("")
     useEffect(() => {
-        const dx = v.x - u.x;
-        const dy = v.y - u.y;
+        const dx = v_point.x - u_point.x;
+        const dy = v_point.y - u_point.y;
         const angle = Math.atan2(dy, dx);
 
         const length = Math.sqrt(dx * dx + dy * dy);
 
         setlineData({ angle, length })
-    }, [u, v])
+    }, [u_point, v_point])
     return (
         <div className=' line' style={{
-            top:`${u.y}px`,
-            left:`${u.x}px`,
+            top:`${u_point.y}px`,
+            left:`${u_point.x}px`,
             transform: `rotate(${lineData.angle}rad)`,
             width: `${lineData.length}px`
 

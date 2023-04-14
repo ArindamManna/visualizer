@@ -1,33 +1,37 @@
 import React, { useState } from 'react'
 import Vertex from './Vertex'
 import Edge from './Edge'
+import { json } from 'react-router-dom';
 
 function GrafEdit() {
+    // const [graph, setGraph] = useState({
+    //     edgeList: [],
+    //     vertexList: []
+    // });
+
     const [vertexList, setVertexList] = useState([]);
     const [edgeList, setEdgeList] = useState([]);
     const [isEdgeCreating, setIsEdgeCreating] = useState(null)
     const [creatingEdgeData, setcreatingEdgeData] = useState({ u: {}, v: {} });
     const [currentActiveBtn, setCurrentActiveBtn] = useState('vertex')
     const AddVertex = (e) => {
-        console.log(e);
         if (e.target.getAttribute('id') !== "graphEdit" || currentActiveBtn != "vertex") {
             return;
         }
         let obj = {
             x: e.nativeEvent.layerX,
-            y: e.nativeEvent.layerY,
-            value: vertexList.length
+            y: e.nativeEvent.layerY
         }
         setVertexList(prev => ([...prev, obj]))
 
     }
-    const EdgeCreateStart = ({ event, point }) => {
+    const EdgeCreateStart = ({ event, point, index }) => {
         if (currentActiveBtn != "edge") {
             return
         }
         event.stopPropagation();
         setIsEdgeCreating(point)
-        setcreatingEdgeData({ u: point, v: point })
+        setcreatingEdgeData({ u: index, v_temp: point })
     }
     const EdgeCreating = (e) => {
         e.stopPropagation();
@@ -39,7 +43,7 @@ function GrafEdit() {
                 let arr = vertexpoint.split('_')
                 setcreatingEdgeData(prev => ({
                     ...prev,
-                    v: {
+                    v_temp: {
                         x: arr[0],
                         y: arr[1]
                     }
@@ -47,7 +51,7 @@ function GrafEdit() {
             } else if (e.nativeEvent.target.getAttribute('id') == "graphEdit") {
                 setcreatingEdgeData(prev => ({
                     ...prev,
-                    v: {
+                    v_temp: {
                         x: e.nativeEvent.layerX,
                         y: e.nativeEvent.layerY
                     }
@@ -62,42 +66,68 @@ function GrafEdit() {
         if (!isEdgeCreating) {
             return
         }
-        let vertexpoint = event.nativeEvent.target.getAttribute('vertexpoint')
+        // let vertexpoint = event.nativeEvent.target.getAttribute('vertexpoint');
+        let vertexpoint = event.nativeEvent.target.getAttribute('id');
         if (vertexpoint) {
             let arr = vertexpoint.split('_');
-            setcreatingEdgeData(prev => ({ ...prev, v: { x: arr[0], y: arr[1] } }))
-            setEdgeList(prev => ([...prev, creatingEdgeData]))
+            setcreatingEdgeData(prev => ({ ...prev, v: arr[1], v_temp: undefined }))
+            // setcreatingEdgeData(prev => ({ ...prev, v: { x: arr[0], y: arr[1] } }))
+            // console.log(edgeList.includes(creatingEdgeData));
+            setEdgeList(prev => ([...prev, {u:creatingEdgeData.u,v:arr[1]}]))
+
         }
         setIsEdgeCreating(null)
 
     }
+    function saveGraph() {
+       
+        let smallest_x=0;
+        let smallest_y=0;
+        vertexList.forEach(item => {
+            smallest_x=Math.min(smallest_x,item.x);
+            smallest_y=Math.min(smallest_y,item.y);
+        });
+        let vertexList_temp=[...vertexList];
+        vertexList.forEach(item,i => {
+            vertexList_temp[i].x-=smallest_x;
+            vertexList_temp[i].y-=smallest_y;
+        });
 
-
+        let graph = { edgeList,vertexList:vertexList_temp};
+        localStorage.setItem('graph',JSON.stringify(graph))
+    }
     return (
         <>
             <div className='z-50 fixed h-screen w-screen flex items-center justify-center shrink-0'>
                 <div className='h-[50rem] w-3/4 bg-white border border-gray-300 rounded-lg shadow-lg  py-3 relative'>
-                    <div className='h-full px-4 relative' id='graphEdit' onClick={AddVertex} onMouseMove={EdgeCreating}
+                    <div className='h-full cursor-crosshair px-4 relative' id='graphEdit' onClick={AddVertex} onMouseMove={EdgeCreating}
                         onMouseUp={(event) => {
                             EdgeCreateEnd({ event })
                         }}  >
                         {vertexList?.map((item, index) => {
-                            return <Vertex data={{...item,index}} key={index} EdgeCreateStart={EdgeCreateStart} EdgeCreateEnd={EdgeCreateEnd} />
+                            return <Vertex data={{ ...item, index }} key={index} EdgeCreateStart={EdgeCreateStart} EdgeCreateEnd={EdgeCreateEnd} />
                         })}
                         {edgeList?.map((item, i) => {
-                            return <Edge data={item} key={i} />
+                            return <Edge vertexList={vertexList} data={item} key={i} />
                         })}
-                        {isEdgeCreating && <Edge data={creatingEdgeData} />}
+                        {isEdgeCreating && <Edge vertexList={vertexList} data={creatingEdgeData} />}
 
 
                     </div>
-                    <div className='h-20 shrink-0 items-center border-t border-gray-300 absolute bottom-0 w-full px-4 py-2 flex gap-4'>
-                        <button className={`btn ${currentActiveBtn == "vertex" ? "btnActive" : ""}`} onClick={() => { setCurrentActiveBtn('vertex') }}>
-                            Vertex
-                        </button>
-                        <button className={`btn ${currentActiveBtn == "edge" ? "btnActive" : ""}`} onClick={() => { setCurrentActiveBtn('edge') }}>
-                            Edge
-                        </button>
+                    <div className='h-20 shrink-0 items-center border-t border-gray-300 absolute bottom-0 w-full px-4 py-2 flex justify-between gap-4'>
+                        <div className="left flex gap-4">
+                            <button className={`btn ${currentActiveBtn == "vertex" ? "btnActive" : ""}`} onClick={() => { setCurrentActiveBtn('vertex') }}>
+                                Vertex
+                            </button>
+                            <button className={`btn ${currentActiveBtn == "edge" ? "btnActive" : ""}`} onClick={() => { setCurrentActiveBtn('edge') }}>
+                                Edge
+                            </button>
+                        </div>
+                        <div className="right">
+                            <button onClick={saveGraph} class="bg-indigo-500 space-x-3 items-center flex justify-center text-lg font-medium  hover:bg-indigo-600 rounded-md px-3 py-2 text-white w-full  disabled:bg-indigo-300 disabled:cursor-not-allowed">
+                                <span>Save</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
