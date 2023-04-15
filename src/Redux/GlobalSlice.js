@@ -6,7 +6,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const GlobalSlice = createSlice({
   name: "counter",
   initialState: {
-    
+    isOpengraphListPopup:false,
+    savedGraphList:localStorage.getItem('savedGraphList')?localStorage.getItem('savedGraphList'):[],
+    currentGraph:{}
   },
 
   reducers: {

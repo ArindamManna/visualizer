@@ -2,10 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+input{
+  background: transparent;
+  &:focus{
+    outline: none
+  }
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+
+
+
+
 .line{
     @apply h-0.5 bg-black absolute z-40 ;
     transform-origin: top left;
 
+}
+.transform-origin-tl{
+  transform-origin: top left;
 }
 .btn{
     @apply px-3 py-2 text-base rounded-md border border-gray-400 text-gray-500 hover:text-blue-500 hover:border-blue-400;
@@ -20,3 +40,36 @@
         @apply cursor-pointer w-full px-4 py-3 flex items-center justify-between text-base shadow-sm border-b  border-gray-300 font-medium hover:text-[#0f4068] hover:bg-white ;
     }
 }
+
+
+
+
+
+table.dashboard-table{
+    @apply w-full overflow-x-auto whitespace-nowrap relative
+  }
+  
+  .table-head-cell{
+    @apply py-2 text-center md:py-3.5 px-3 font-semibold text-gray-500 text-xs  md:text-[0.9375rem]
+  }
+  
+  table.dashboard-table thead{
+    @apply sticky top-0 bg-white  after:absolute after:h-[0.0625rem] after:w-full after:bg-gray-400 after:z-[99999] after:left-0 after:bottom-0 before:absolute before:h-[0.0625rem] before:w-full before:bg-gray-400 before:z-[99999] before:left-0 before:top-0
+  }
+  .table-body-cell{
+    @apply py-2.5 text-center md:py-3.5 px-3 text-black font-semibold text-xs md:text-sm 
+  }
+  table.dashboard-table thead tr{
+    @apply sticky bg-white;
+    z-index: 9999 ;
+  }
+table.dashboard-table tbody tr:nth-child(2n+1){
+    // @apply bg-[rgb(15 154 214 / 10%)]
+    background: rgb(15 154 214 / 10%);
+   
+  }
+  table.dashboard-table tbody tr:nth-child(2n) td{
+    // background-color: rgba(15,154,214,.25);
+    @apply py-2 md:py-5
+   
+  }
