@@ -2,19 +2,21 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Vertex from './Vertex'
 import Edge from './Edge'
 import { json } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import InputGraph from './Modal/InputGraph';
+import { updateGlobalState } from '../Redux/GlobalSlice';
 
 function GrafEdit() {
 
-    const { currentGraph } = useSelector((state) => {
-        const { currentGraph } = state.GlobalSlice;
-        return { currentGraph }
+    const { currentGraph ,savedGraphList} = useSelector((state) => {
+        const { currentGraph ,savedGraphList} = state.GlobalSlice;
+        return { currentGraph,savedGraphList }
     })
+    const dispatch=useDispatch()
 
     const [GraphDetails, setGraphDetails] = useState({
-        Weighted_graph: true,
-        Directed_graph: true,
+        Weighted_graph: "true",
+        Directed_graph: "true",
         name: ""
     })
     const [vertexList, setVertexList] = useState([]);
@@ -52,10 +54,8 @@ function GrafEdit() {
         }
         makeGraphUndirected()
     }, [GraphDetails])
-
-
     useEffect(() => {
-        if (currentGraph.edgeList && currentGraph.vertexList) {
+        if (currentGraph?.edgeList && currentGraph?.vertexList) {
             setEdgeList(currentGraph.edgeList);
             setVertexList(currentGraph.vertexList)
         } else {
@@ -66,6 +66,7 @@ function GrafEdit() {
             setGraphDetails(currentGraph)
         }
     }, [currentGraph])
+
     const AddVertex = (e) => {
         if (e.target.getAttribute('id') !== "graphEdit" || currentActiveBtn != "vertex") {
             return;
@@ -77,6 +78,7 @@ function GrafEdit() {
         setVertexList(prev => ([...prev, obj]))
 
     }
+    //#region create edge
     const EdgeCreateStart = ({ event, point, index }) => {
         if (currentActiveBtn != "edge") {
             return
@@ -112,7 +114,6 @@ function GrafEdit() {
 
         }
     }
-
     const EdgeCreateEnd = ({ event, point }) => {
         event.stopPropagation();
         if (!isEdgeCreating) {
@@ -128,7 +129,7 @@ function GrafEdit() {
             setcreatingEdgeData(prev => ({ ...prev, v: arr[1], v_temp: undefined }))
             // setcreatingEdgeData(prev => ({ ...prev, v: { x: arr[0], y: arr[1] } }))
             // console.log(edgeList.includes(creatingEdgeData));
-            setEdgeList(prev => ([...prev,]))
+           
             setEdgeList(prev => {
                 let prev_temp = [...prev];
                 let edge = { u: creatingEdgeData.u, v: arr[1] };
@@ -144,6 +145,8 @@ function GrafEdit() {
         setIsEdgeCreating(null)
 
     }
+    //#endregion 
+
     function saveGraph() {
 
         let smallest_x = 0;
@@ -154,14 +157,32 @@ function GrafEdit() {
         });
         let vertexList_temp = [...vertexList];
         vertexList.forEach((item, i) => {
-            vertexList_temp[i].x -= smallest_x;
-            vertexList_temp[i].y -= smallest_y;
+            vertexList_temp[i]={
+                ...vertexList_temp[i],
+                x:vertexList_temp[i].x - smallest_x,
+                y:vertexList_temp[i].y - smallest_y
+            }
+            // vertexList_temp[i].x -= smallest_x;
+            // vertexList_temp[i].y -= smallest_y;
         });
 
-        let graph = { edgeList, vertexList: vertexList_temp };
-        localStorage.setItem('graph', JSON.stringify(graph))
+        let adjacent_matrix=new Array(vertexList.length)
+        adjacent_matrix.fill([])
+        edgeList.forEach((edge)=>{
+            adjacent_matrix[edge.u].push([edge.v,edge.v]);
+        })
+       
+        let graph = { edgeList, vertexList: vertexList_temp ,adjacent_matrix,...GraphDetails};
+        //#region  backend api change
+        
+        dispatch(updateGlobalState({
+            savedGraphList:[...savedGraphList,graph]
+        }))
+        localStorage.setItem('savedGraphList', JSON.stringify([...savedGraphList,graph]))
+        //#endregion
     }
 
+    //#region delete edge and vertex
     function removeEdgeConectedwithVertex({index,edgeList_temp}) { // index is the index of deleted vertex and edgelist_temp for perfome delete opration on this
         let u_ind=edgeList_temp.findIndex((item) => (item.u == index ))
         let v_ind=edgeList_temp.findIndex((item) => ( item.v == index))
@@ -179,8 +200,10 @@ function GrafEdit() {
 
     }
     const deleteVertex = ({ index }) => {
+        // delete connected edge with vertex no index
         let edgeList_temp= removeEdgeConectedwithVertex({index,edgeList_temp:[...edgeList]})
         setEdgeList(edgeList_temp)
+        // delete vertex
         setVertexList(prev => {
             let prev_temp = [...prev];
             prev_temp.splice(index, 1)
@@ -190,6 +213,7 @@ function GrafEdit() {
     const deleteEdge = ({ index }) => {
         setEdgeList(prev => {
             let prev_temp = [...prev];
+            // if graph is undirected then delete both forward and backward edge
             if (GraphDetails.Directed_graph == "false") {
                 let edge = prev_temp[index];
                 prev_temp.splice(index, 1);
@@ -202,6 +226,8 @@ function GrafEdit() {
             return prev_temp
         })
     }
+    //#endregion
+
     return (
         <>
             {/* <div className='z-50 fixed h-screen w-screen flex items-center justify-center shrink-0'> */}

@@ -2,6 +2,7 @@ import React from 'react'
 
 function InputGraph({ data }) {
     const { GraphDetails, setGraphDetails, edgeList, setEdgeList } = data
+    
     return (
         <>
             {/* <div className='absolute z-50 h-full w-full top-0 left-0 flex items-center justify-center'> */}
@@ -9,7 +10,7 @@ function InputGraph({ data }) {
                 <div className='absolute z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2   max-h-[40rem] overflow-auto bg-white border border-gray-400 rounded-md p-4 shadow-md  ' >
 
                     <p className='mb-1  text-base text-black'>Name</p>
-                    <input type="text" name='name' placeholder='Graph Name' className='border-b mb-2 border-gray-400 py-1 px-2 text-sm text-gray-400' onChange={(e)=>{setGraphDetails(prev=>({...prev,[e.target.name]:e.target.value}))}} />
+                    <input type="text" name='name' value={GraphDetails?.name} placeholder='Graph Name' className='border-b mb-2 border-gray-400 py-1 px-2 text-sm text-gray-400' onChange={(e)=>{setGraphDetails(prev=>({...prev,[e.target.name]:e.target.value}))}} />
                     <p className='mb-1  text-base text-black'>Type of Graph</p>
                     <div className='flex items-center mb-1'>
                         <input type="radio" id="html" name="Weighted_graph" value="true" checked={GraphDetails.Weighted_graph=="true"} onChange={(e)=>{setGraphDetails(prev=>({...prev,[e.target.name]:e.target.value}))}} />
@@ -63,7 +64,7 @@ function InputGraph({ data }) {
                                                     }
                                                     return prev_temp
                                                 })
-                                            }} type="number" placeholder='Enter Weight' className='max-w-[7rem] py-2 px-3 border-b text-center border-gray-400' />
+                                            }} type="number" value={edgeList[i].w} placeholder='Enter Weight' className='max-w-[7rem] py-2 px-3 border-b text-center border-gray-400' />
                                         </td>
                                     </tr>
                                 )

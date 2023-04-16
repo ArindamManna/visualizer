@@ -7,8 +7,8 @@ export const GlobalSlice = createSlice({
   name: "counter",
   initialState: {
     isOpengraphListPopup:false,
-    savedGraphList:localStorage.getItem('savedGraphList')?localStorage.getItem('savedGraphList'):[],
-    currentGraph:{}
+    savedGraphList:localStorage.getItem('savedGraphList')?JSON.parse( localStorage.getItem('savedGraphList')):[],
+    currentGraph:null
   },
 
   reducers: {
