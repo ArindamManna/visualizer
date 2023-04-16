@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Vertex from './Vertex'
 import Edge from './Edge'
 import { json } from 'react-router-dom';
@@ -13,14 +13,45 @@ function GrafEdit() {
     })
 
     const [GraphDetails, setGraphDetails] = useState({
-        Weighted_graph:true,
-        Directed_graph:true
+        Weighted_graph: true,
+        Directed_graph: true,
+        name: ""
     })
     const [vertexList, setVertexList] = useState([]);
     const [edgeList, setEdgeList] = useState([]);
     const [isEdgeCreating, setIsEdgeCreating] = useState(null)
     const [creatingEdgeData, setcreatingEdgeData] = useState({ u: {}, v: {} });
     const [currentActiveBtn, setCurrentActiveBtn] = useState('vertex');
+
+    function makeGraphUndirected() {
+        if (GraphDetails.Directed_graph == "false") {
+            let edgeList_temp = [...edgeList];
+
+            edgeList.forEach((edge) => {
+                let ind = edgeList_temp.findIndex((item) => (item.u == edge.v && item.v == edge.u))
+                if (ind == -1) {
+                    edgeList_temp.push({
+                        u: edge.v,
+                        v: edge.u
+                    })
+                }
+            })
+            setEdgeList(edgeList_temp)
+        }
+    }
+    useEffect(() => {
+        if (GraphDetails.Weighted_graph == "false") {
+            setEdgeList(prev => {
+                let prev_temp = [...prev];
+                prev.forEach((item, i) => {
+                    prev_temp[i].w = undefined
+                });
+
+                return prev_temp
+            })
+        }
+        makeGraphUndirected()
+    }, [GraphDetails])
 
 
     useEffect(() => {
@@ -87,18 +118,27 @@ function GrafEdit() {
         if (!isEdgeCreating) {
             return
         }
-        debugger
         let vertexpoint = event.nativeEvent.target.getAttribute('vertexpoint');
         let id_oflastvertex = event.nativeEvent.target.getAttribute('id');
         let arr = id_oflastvertex.split('_');
-        let ind=edgeList.findIndex((item)=>(item.u==creatingEdgeData.u && item.v==arr[1]))
+        let ind = edgeList.findIndex((item) => (item.u == creatingEdgeData.u && item.v == arr[1]))
 
         if (vertexpoint && creatingEdgeData.u != arr[1] && ind == -1) {
 
             setcreatingEdgeData(prev => ({ ...prev, v: arr[1], v_temp: undefined }))
             // setcreatingEdgeData(prev => ({ ...prev, v: { x: arr[0], y: arr[1] } }))
             // console.log(edgeList.includes(creatingEdgeData));
-            setEdgeList(prev => ([...prev, { u: creatingEdgeData.u, v: arr[1] }]))
+            setEdgeList(prev => ([...prev,]))
+            setEdgeList(prev => {
+                let prev_temp = [...prev];
+                let edge = { u: creatingEdgeData.u, v: arr[1] };
+                let ind = prev_temp.findIndex((item) => (item.u == edge.v && item.v == edge.u));
+                if (GraphDetails.Directed_graph == "false" && ind == -1) {
+                    return [...prev, edge, { u: edge.v, v: edge.u }];
+                }else{
+                    return [...prev, edge];
+                }
+            })
 
         }
         setIsEdgeCreating(null)
@@ -121,6 +161,47 @@ function GrafEdit() {
         let graph = { edgeList, vertexList: vertexList_temp };
         localStorage.setItem('graph', JSON.stringify(graph))
     }
+
+    function removeEdgeConectedwithVertex({index,edgeList_temp}) { // index is the index of deleted vertex and edgelist_temp for perfome delete opration on this
+        let u_ind=edgeList_temp.findIndex((item) => (item.u == index ))
+        let v_ind=edgeList_temp.findIndex((item) => ( item.v == index))
+        if (u_ind==-1 && v_ind==-1) {
+            return edgeList_temp;
+        }
+        if (u_ind!=-1) {
+            edgeList_temp.splice(u_ind,1);
+            v_ind=edgeList_temp.findIndex((item) => ( item.v == index))
+        }
+        if (v_ind!=-1) {
+            edgeList_temp.splice(v_ind,1);
+        }
+      return  removeEdgeConectedwithVertex({index,edgeList_temp})
+
+    }
+    const deleteVertex = ({ index }) => {
+        let edgeList_temp= removeEdgeConectedwithVertex({index,edgeList_temp:[...edgeList]})
+        setEdgeList(edgeList_temp)
+        setVertexList(prev => {
+            let prev_temp = [...prev];
+            prev_temp.splice(index, 1)
+            return prev_temp
+        })
+    }
+    const deleteEdge = ({ index }) => {
+        setEdgeList(prev => {
+            let prev_temp = [...prev];
+            if (GraphDetails.Directed_graph == "false") {
+                let edge = prev_temp[index];
+                prev_temp.splice(index, 1);
+                let ind = prev_temp.findIndex((item) => (item.u == edge.v && item.v == edge.u))
+                prev_temp.splice(ind, 1);
+            } else {
+
+                prev_temp.splice(index, 1)
+            }
+            return prev_temp
+        })
+    }
     return (
         <>
             {/* <div className='z-50 fixed h-screen w-screen flex items-center justify-center shrink-0'> */}
@@ -130,10 +211,10 @@ function GrafEdit() {
                         EdgeCreateEnd({ event })
                     }}  >
                     {vertexList?.map((item, index) => {
-                        return <Vertex data={{ ...item, index }} key={index} EdgeCreateStart={EdgeCreateStart} EdgeCreateEnd={EdgeCreateEnd} />
+                        return <Vertex data={{ ...item, index }} deleteVertex={deleteVertex} key={index} EdgeCreateStart={EdgeCreateStart} EdgeCreateEnd={EdgeCreateEnd} />
                     })}
                     {edgeList?.map((item, i) => {
-                        return <Edge vertexList={vertexList} data={item} key={i} />
+                        return <Edge vertexList={vertexList} deleteEdge={deleteEdge} data={{ ...item, index: i }} key={i} />
                     })}
                     {isEdgeCreating && <Edge vertexList={vertexList} data={creatingEdgeData} />}
 
@@ -159,14 +240,14 @@ function GrafEdit() {
                 </div>
 
             </div>
-                {currentActiveBtn == "InputGraph" &&
-                    <InputGraph data={{
-                        GraphDetails,
-                        setGraphDetails,
-                        edgeList,
-                        setEdgeList
-                    }}  />
-                }
+            {currentActiveBtn == "InputGraph" &&
+                <InputGraph data={{
+                    GraphDetails,
+                    setGraphDetails,
+                    edgeList,
+                    setEdgeList
+                }} />
+            }
             {/* </div> */}
         </>
     )
