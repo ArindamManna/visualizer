@@ -1,6 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@keyframes arrowForward {
+  from {
+    background: linear-gradient(to right, #ef4444 0%, black 0%);
+  }
+  to {
+    background: linear-gradient(to right, #ef4444 100%, black 100%);
+  }
+}
+.arrowForward {
+  animation: arrowForward 1000ms ease-out forwards;
+}
+
 input {
   background: transparent;
 }
@@ -21,7 +33,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .line {
-  @apply h-0.5 bg-black absolute z-40;
+  @apply h-0.5  absolute z-40;
   transform-origin: top left;
 }
 

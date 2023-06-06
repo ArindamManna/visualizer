@@ -1,7 +1,24 @@
 import React, { useEffect, useState } from 'react'
 
-function Edge({ data, vertexList, deleteEdge }) {
+function Edge({ data, vertexList, deleteEdge,stack }) {
     const { u, v, v_temp, w, index } = data;
+    const {pastStack, fetureStack, currentStatus,visited_edge}=stack?stack:{};
+    let currentEdge=visited_edge?.[currentStatus?.visited?.length-1]
+    console.log(currentEdge);
+    const [isEdgeVisited,setIsEdgeVisited]=useState(false);
+    console.log(u,v,isEdgeVisited);
+    useEffect(()=>{
+        // debugger
+        for (let i = 0; i < currentStatus?.visited?.length-1; i++) {
+            let item=visited_edge[i]
+            if (item[0]==u && item[1]==v) {
+                setIsEdgeVisited(true)
+                break
+            }
+            
+        }
+    },[stack])
+    // console.log(currentEdge, u, v);
     let u_point = vertexList[u];
 
     let v_point = v_temp ? v_temp : vertexList[v];
@@ -30,7 +47,7 @@ function Edge({ data, vertexList, deleteEdge }) {
     return (
         <>
             <div onDoubleClick={(e) => {
-                deleteEdge({ index })
+                deleteEdge?.({ index })
             }} className='transform-origin-tl absolute h-1.5 flex items-end lineParent' style={{
                 top: `${u_point?.y}px`,
                 left: `${u_point?.x}px`,
@@ -38,7 +55,10 @@ function Edge({ data, vertexList, deleteEdge }) {
                 width: `${lineData?.length}px`
 
             }}>
-                <div className=' line w-full ' >
+                <div 
+                className={` line w-full bg-black   ${currentEdge?.[0]==u && currentEdge?.[1]==v ? "arrowForward": ""} ${isEdgeVisited?"bg-blue-500":""}`} 
+                // className=' line w-full ' 
+                >
                     {w &&
                         <span className='absolute left-1/2 -translate-x-1/2 top-full mt-1'>
                             {w}

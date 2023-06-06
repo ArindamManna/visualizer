@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "animation";
 
 input{
   background: transparent;
@@ -24,7 +25,7 @@ input[type=number]::-webkit-outer-spin-button {
   }
 }
 .line{
-    @apply h-0.5 bg-black absolute z-40 ;
+    @apply h-0.5  absolute z-40 ;
     transform-origin: top left;
 
 }

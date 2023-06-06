@@ -1,0 +1,16 @@
+@keyframes arrowForward{
+    from{
+        
+        background: linear-gradient(to right,  #ef4444 0%,black 0%,);
+    
+    }
+    
+    to{
+        background: linear-gradient(to right,  #ef4444 100%,black 100%,);
+    
+    }
+}
+.arrowForward{
+    
+    animation: arrowForward 1000ms ease-out forwards;
+}

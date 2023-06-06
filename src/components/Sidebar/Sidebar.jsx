@@ -23,10 +23,16 @@ function Sidebar() {
             label: "Graph Traversal",
             subMenu: [
                 {
-                    label: "BFS"
+                    label: "BFS",
+                    onclick: () => {
+                        navigate('/bfs')
+                    }
                 },
                 {
-                    label: "DFS"
+                    label: "DFS",
+                    onclick: () => {
+                        navigate('/dfs')
+                    }
                 }
             ]
         },

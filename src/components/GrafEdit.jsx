@@ -46,7 +46,10 @@ function GrafEdit() {
             setEdgeList(prev => {
                 let prev_temp = [...prev];
                 prev.forEach((item, i) => {
-                    prev_temp[i].w = undefined
+                    prev_temp[i] = {
+                        ...prev_temp[i],
+                        w:undefined
+                    }
                 });
 
                 return prev_temp
@@ -165,14 +168,19 @@ function GrafEdit() {
             // vertexList_temp[i].x -= smallest_x;
             // vertexList_temp[i].y -= smallest_y;
         });
-
+debugger
         let adjacent_matrix=new Array(vertexList.length)
-        adjacent_matrix.fill([])
+        // adjacent_matrix.fill([])
         edgeList.forEach((edge)=>{
-            adjacent_matrix[edge.u].push([edge.v,edge.v]);
+            if (Array.isArray(adjacent_matrix[edge.u])) {
+                
+                adjacent_matrix[edge.u].push([edge.v,edge.w]);
+            }else{
+                adjacent_matrix[edge.u]=[[edge.v,edge.w]]
+            }
         })
        
-        let graph = { edgeList, vertexList: vertexList_temp ,adjacent_matrix,...GraphDetails};
+        let graph = {...GraphDetails, edgeList, vertexList: vertexList_temp ,adjacent_matrix,};
         //#region  backend api change
         
         dispatch(updateGlobalState({
