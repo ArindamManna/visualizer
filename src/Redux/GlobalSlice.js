@@ -10,11 +10,11 @@ export const GlobalSlice = createSlice({
     savedGraphList: localStorage.getItem('savedGraphList') ? JSON.parse(localStorage.getItem('savedGraphList')) : [],
     currentGraph: null,
 
-    pastStack: [],
-    fetureStack: [],
-    currentStatus:{
+    // pastStack: [],
+    // fetureStack: [],
+    // currentStatus:{
       
-    }
+    // }
   },
 
   reducers: {
