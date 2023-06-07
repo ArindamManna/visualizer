@@ -3,10 +3,8 @@ import React, { useEffect, useState } from 'react'
 function Edge({ data, vertexList, deleteEdge,stack }) {
     const { u, v, v_temp, w, index } = data;
     const {pastStack, fetureStack, currentStatus,visited_edge}=stack?stack:{};
-    let currentEdge=visited_edge?.[currentStatus?.visited?.length-1]
-    console.log(currentEdge);
+    let currentEdge=visited_edge?.[currentStatus?.visited?.length-1];
     const [isEdgeVisited,setIsEdgeVisited]=useState(false);
-    console.log(u,v,isEdgeVisited);
     useEffect(()=>{
         // debugger
         let temp=false;

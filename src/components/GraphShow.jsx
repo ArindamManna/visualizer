@@ -119,18 +119,44 @@ function GraphShow() {
         setStack(prev => ({ fetureStack: fetureStack_temp, currentStatus: {}, visited_edge, pastStack: [] }))
         return fetureStack_temp;
     }
+    function dfs(graph, start) {
+        if (start == undefined || start == null) {
+            alert("please type source")
+        }
+        const visited = [];
+        let visited_edge = []
+        let fetureStack_temp = []
+      
+        function dfsHelper(vertex) {
+          visited.push(`${vertex}`);
+          fetureStack_temp = [...fetureStack_temp, { visited: [...visited] }]
+          console.log(vertex);
+      
+          const neighbors = graph[vertex];
+          for (let i = 0; i < neighbors.length; i++) {
+            const neighborVertex = neighbors[i][0];
+            if (!visited.includes(`${neighborVertex}`)) {
+                visited_edge.push([`${vertex}`, `${neighborVertex}`]);
+              dfsHelper(neighborVertex);
+            //   fetureStack_temp = [...fetureStack_temp, { queue: [...queue], visited: [...visited] }]
+            }
+          }
+        }
+      
+        dfsHelper(start);
+        setStack(prev => ({ fetureStack: fetureStack_temp, currentStatus: {}, visited_edge, pastStack: [] }))
+        
+        return fetureStack_temp;
+      }
+      console.log(stack,"dfafasd");
     const [nextCall, setNextCall] = useState(undefined)
-    async function runAlgo(params) {
+    function runAlgo(params) {
         // resetStack()
-        bfs(currentGraph?.adjacent_matrix, source);
+        dfs(currentGraph?.adjacent_matrix, source);
+        // bfs(currentGraph?.adjacent_matrix, source);
 
 
         return setNextCall(true)
-
-
-
-
-
     }
     useEffect(() => {
         if (nextCall !== undefined) {
@@ -184,7 +210,6 @@ function GraphShow() {
 
 
    async function prevStep(params) {
-    debugger
         await new Promise(resolve => setTimeout(resolve, 1500));
         // return if feature stack is emty
         if (stack.pastStack?.length == 0) {
@@ -214,16 +239,7 @@ function GraphShow() {
         }))
 
 
-        // recursion call
-        // if (playPauseStatus == "running") {
-        //     if (fetureStack_temp?.length != 0) {
-        //         // return nextCall(i+1) //just for console pass value
-        //         setNextCall(!nextCall)
-        //     } else {
-        //         setNextCall(undefined)
-        //         setPlayPauseStatus("restart")
-        //     }
-        // }
+        
     }
 
 
@@ -231,7 +247,7 @@ function GraphShow() {
 
 
 
-
+    // play next prev btn click func
     const next = () => {
         if (playPauseStatus == "start") {
             setPlayPauseStatus("paused")
