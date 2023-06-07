@@ -9,14 +9,20 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
     console.log(u,v,isEdgeVisited);
     useEffect(()=>{
         // debugger
+        let temp=false;
         for (let i = 0; i < currentStatus?.visited?.length-1; i++) {
             let item=visited_edge[i]
             if (item[0]==u && item[1]==v) {
-                setIsEdgeVisited(true)
+                // setIsEdgeVisited(true)
+                temp=true;
                 break
+            }else{
+                temp=false;
             }
             
         }
+
+        setIsEdgeVisited(temp)
     },[stack])
     // console.log(currentEdge, u, v);
     let u_point = vertexList[u];

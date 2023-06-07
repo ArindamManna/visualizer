@@ -30,6 +30,16 @@ function GraphShow() {
         },
         visited_edge:[]
     })
+    const resetStack=()=>{
+        setStack({
+            pastStack: [],
+            fetureStack: [],
+            currentStatus: {
+    
+            },
+            visited_edge:[]
+        })
+    }
     const [source,setSource]=useState(0)
     function makeGraphUndirected() {
         if (GraphDetails.Directed_graph == "false") {
@@ -113,7 +123,7 @@ function GraphShow() {
         dispatch(updateGlobalState({
             fetureStack: fetureStack_temp
         }));
-        setStack(prev => ({ ...prev, fetureStack: fetureStack_temp, currentStatus: {},visited_edge }))
+        setStack(prev => ({  fetureStack: fetureStack_temp, currentStatus: {},visited_edge ,pastStack:[]}))
         return fetureStack_temp
         console.log(fetureStack_temp, "fetureStack_temp");
         console.log(visited, "visited");
@@ -121,17 +131,11 @@ function GraphShow() {
     }
     const [nextCall, setNextCall] = useState(undefined)
     async function runAlgo(params) {
-        // setStack({
-        //     pastStack: [],
-        //     fetureStack: [],
-        //     currentStatus: {
-
-        //     }
-        // })
+        // resetStack()
         bfs(currentGraph?.adjacent_matrix,source);
 
         // setTimeout(() => {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1500));
         // return nextCall(0)
         return setNextCall(true)
 
@@ -167,7 +171,7 @@ function GraphShow() {
     // }
 
    async function nextStep(params) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1500));
         // return if feature stack is emty
         if (stack.fetureStack?.length == 0) {
             return
