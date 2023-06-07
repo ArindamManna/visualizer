@@ -1,13 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import Vertex from './Vertex'
 import Edge from './Edge'
-import { json } from 'react-router-dom';
+import { json, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import InputGraph from './Modal/InputGraph';
 import { updateGlobalState } from '../Redux/GlobalSlice';
+import ResultBoard from './ResultBoard';
 
 function GraphShow() {
-
+    const location = useLocation()
+    // console.log(location,"dfassfda");
     const { currentGraph, savedGraphList } = useSelector((state) => {
         const { currentGraph, savedGraphList } = state.GlobalSlice;
         return { currentGraph, savedGraphList }
@@ -39,8 +41,12 @@ function GraphShow() {
 
             },
             visited_edge: []
-        })
+        });
+        setPlayPauseStatus("start")
     }
+    useEffect(()=>{
+        resetStack()
+    },[location])
     const [source, setSource] = useState(0)
     function makeGraphUndirected() {
         if (GraphDetails.Directed_graph == "false") {
@@ -126,34 +132,37 @@ function GraphShow() {
         const visited = [];
         let visited_edge = []
         let fetureStack_temp = []
-      
+
         function dfsHelper(vertex) {
-          visited.push(`${vertex}`);
-          fetureStack_temp = [...fetureStack_temp, { visited: [...visited] }]
-          console.log(vertex);
-      
-          const neighbors = graph[vertex];
-          for (let i = 0; i < neighbors.length; i++) {
-            const neighborVertex = neighbors[i][0];
-            if (!visited.includes(`${neighborVertex}`)) {
-                visited_edge.push([`${vertex}`, `${neighborVertex}`]);
-              dfsHelper(neighborVertex);
-            //   fetureStack_temp = [...fetureStack_temp, { queue: [...queue], visited: [...visited] }]
+            visited.push(`${vertex}`);
+            fetureStack_temp = [...fetureStack_temp, { visited: [...visited] }]
+            console.log(vertex);
+
+            const neighbors = graph[vertex];
+            for (let i = 0; i < neighbors.length; i++) {
+                const neighborVertex = neighbors[i][0];
+                if (!visited.includes(`${neighborVertex}`)) {
+                    visited_edge.push([`${vertex}`, `${neighborVertex}`]);
+                    dfsHelper(neighborVertex);
+                    //   fetureStack_temp = [...fetureStack_temp, { queue: [...queue], visited: [...visited] }]
+                }
             }
-          }
         }
-      
+
         dfsHelper(start);
         setStack(prev => ({ fetureStack: fetureStack_temp, currentStatus: {}, visited_edge, pastStack: [] }))
-        
+
         return fetureStack_temp;
-      }
-      console.log(stack,"dfafasd");
+    }
+    console.log(stack, "dfafasd");
     const [nextCall, setNextCall] = useState(undefined)
     function runAlgo(params) {
         // resetStack()
-        dfs(currentGraph?.adjacent_matrix, source);
-        // bfs(currentGraph?.adjacent_matrix, source);
+        if (location.pathname=="/bfs") {
+            bfs(currentGraph?.adjacent_matrix, source);
+        }else if (location.pathname=="/dfs") {
+            dfs(currentGraph?.adjacent_matrix, source);
+        }
 
 
         return setNextCall(true)
@@ -209,7 +218,7 @@ function GraphShow() {
     }
 
 
-   async function prevStep(params) {
+    async function prevStep(params) {
         await new Promise(resolve => setTimeout(resolve, 1500));
         // return if feature stack is emty
         if (stack.pastStack?.length == 0) {
@@ -235,11 +244,11 @@ function GraphShow() {
             ...prev,
             fetureStack: fetureStack_temp,
             pastStack: pastStack_temp,
-            currentStatus: stack?.pastStack[stack?.pastStack?.length-1]
+            currentStatus: stack?.pastStack[stack?.pastStack?.length - 1]
         }))
 
 
-        
+
     }
 
 
@@ -254,28 +263,28 @@ function GraphShow() {
             runAlgo()
 
         }
-        if (playPauseStatus=="paused") {
+        if (playPauseStatus == "paused") {
             setNextCall(!nextCall)
         }
     }
     const playPause = () => {
 
-        if (playPauseStatus == "start" || playPauseStatus=="restart") {
+        if (playPauseStatus == "start" || playPauseStatus == "restart") {
             setPlayPauseStatus("running")
             runAlgo()
         }
-        if (playPauseStatus=="running") {
+        if (playPauseStatus == "running") {
             setPlayPauseStatus("paused")
         }
     }
     const prev = () => {
         prevStep()
-     }
+    }
 
 
     return (
         <>
-            <div className='h-[30rem] w-full bg-white border border-gray-300 rounded-lg shadow-lg  py-3 relative'>
+            <div className='h-1/2 w-full bg-white border border-gray-300 rounded-lg shadow-lg  py-3 relative'>
                 <div className='h-full cursor-crosshair px-4 relative' id='graphEdit'
                 >
                     {vertexList?.map((item, index) => {
@@ -354,7 +363,7 @@ function GraphShow() {
                 </div>
 
             </div>
-
+            <ResultBoard stack={stack} />
         </>
     )
 }

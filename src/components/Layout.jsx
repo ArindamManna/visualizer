@@ -14,7 +14,7 @@ function Layout({children}) {
             <Navbar />
             <main className='flex h-full pt-16'>
                 <Sidebar/>
-                <div className=' w-full h-full p-4 relative'>
+                <div className=' w-full h-full p-4 relative flex flex-col gap-4'>
                     {children}
                     {isOpengraphListPopup && <GraphList/>}
                     

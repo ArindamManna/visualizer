@@ -9,6 +9,7 @@ function AppRouter() {
             <Routes>
                 <Route exact={true} path="/" element={<Home />} />
                 <Route exact={true} path="/bfs" element={<BFS />} />
+                <Route exact={true} path="/dfs" element={<BFS />} />
             </Routes>
         </>
     )
