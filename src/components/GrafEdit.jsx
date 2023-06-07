@@ -280,7 +280,7 @@ debugger
                     setGraphDetails,
                     edgeList,
                     setEdgeList
-                }} />
+                }} doneFunc={()=>{setCurrentActiveBtn("vertex")}} />
             }
             {/* </div> */}
         </>

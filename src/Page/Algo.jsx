@@ -2,7 +2,7 @@ import React from 'react'
 import Layout from '../components/Layout'
 import GraphShow from '../components/GraphShow'
 
-function BFS() {
+function Algo() {
     return (
         <Layout>
             <GraphShow/>
@@ -10,4 +10,4 @@ function BFS() {
     )
 }
 
-export default BFS
+export default Algo

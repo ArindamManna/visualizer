@@ -1,15 +1,18 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from '../Page/Home'
-import BFS from '../Page/BFS'
+import Algo from '../Page/Algo'
+import NotFoundPage from '../Page/NotFoundPage'
 
 function AppRouter() {
     return (
         <>
             <Routes>
                 <Route exact={true} path="/" element={<Home />} />
-                <Route exact={true} path="/bfs" element={<BFS />} />
-                <Route exact={true} path="/dfs" element={<BFS />} />
+                <Route exact={true} path="/bfs" element={<Algo />} />
+                <Route exact={true} path="/dfs" element={<Algo />} />
+                <Route exact={true} path="/prim" element={<Algo />} />
+                <Route exact={true} path="/*" element={<NotFoundPage />} />
             </Routes>
         </>
     )

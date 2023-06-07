@@ -37,10 +37,36 @@ function Sidebar() {
             ]
         },
         {
-            label: "Shortest Path Find",
+            label: "Minimum Spanning Tree",
             subMenu: [
                 {
-                    label: "Dijextra Algo"
+                    label: "Prim's Algorithm",
+                    onclick: () => {
+                        navigate('/prim')
+                    }
+                },
+                {
+                    label: "Kruskal's Algorithm",
+                    onclick: () => {
+                        navigate('/kruskal')
+                    }
+                }
+            ]
+        },
+        {
+            label: "Shortest Path",
+            subMenu: [
+                {
+                    label: "Floyd's Algorithm",
+                    onclick: () => {
+                        navigate('/floyd')
+                    }
+                },
+                {
+                    label: "Dijkstra's Algorithm",
+                    onclick: () => {
+                        navigate('/dijkstra')
+                    }
                 }
             ]
         },

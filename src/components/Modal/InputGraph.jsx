@@ -1,6 +1,6 @@
 import React from 'react'
 
-function InputGraph({ data }) {
+function InputGraph({ data,doneFunc }) {
     const { GraphDetails, setGraphDetails, edgeList, setEdgeList } = data
     
     return (
@@ -76,7 +76,7 @@ function InputGraph({ data }) {
 
 
                     <div className=' flex gap-4 justify-end mt-2'>
-                        <button className='btn'>
+                        <button className='btn' type='button' onClick={()=>{doneFunc()}}>
                             Done
                         </button>
 
