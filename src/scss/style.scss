@@ -81,3 +81,15 @@ table.dashboard-table tbody tr:nth-child(2n+1){
     @apply py-2 md:py-5
    
   }
+
+
+.graphlist{
+  .graphlist_graph{
+    .hov{
+      display: none;
+    }
+    &:hover .hov{
+      display: flex;
+    }
+  }
+}

@@ -12,6 +12,9 @@ function AppRouter() {
                 <Route exact={true} path="/bfs" element={<Algo />} />
                 <Route exact={true} path="/dfs" element={<Algo />} />
                 <Route exact={true} path="/prim" element={<Algo />} />
+                <Route exact={true} path="/kruskal" element={<Algo />} />
+                <Route exact={true} path="/floyd" element={<Algo />} />
+                <Route exact={true} path="/dijkstra" element={<Algo />} />
                 <Route exact={true} path="/*" element={<NotFoundPage />} />
             </Routes>
         </>

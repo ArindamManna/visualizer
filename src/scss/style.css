@@ -86,4 +86,11 @@ table.dashboard-table tbody tr:nth-child(2n+1) {
 
 table.dashboard-table tbody tr:nth-child(2n) td {
   @apply py-2 md:py-5;
+}
+
+.graphlist .graphlist_graph .hov {
+  display: none;
+}
+.graphlist .graphlist_graph:hover .hov {
+  display: flex;
 }/*# sourceMappingURL=style.css.map */

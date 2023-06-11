@@ -64,7 +64,7 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
                 // className=' line w-full ' 
                 >
                     {w &&
-                        <span className='weight absolute left-1/2 -translate-x-1/2 top-full mt-1'>
+                        <span className={`weight absolute left-1/2 -translate-x-1/2 top-full mt-1 ${u_point?.x>v_point?.x?"rotate-180":""} `}>
                             {w}
                         </span>
                     }

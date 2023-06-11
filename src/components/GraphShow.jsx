@@ -8,8 +8,8 @@ import { updateGlobalState } from '../Redux/GlobalSlice';
 import ResultBoard from './ResultBoard';
 
 function GraphShow() {
+    //#region state
     const location = useLocation()
-    // console.log(location,"dfassfda");
     const { currentGraph, savedGraphList } = useSelector((state) => {
         const { currentGraph, savedGraphList } = state.GlobalSlice;
         return { currentGraph, savedGraphList }
@@ -25,6 +25,7 @@ function GraphShow() {
     const [edgeList, setEdgeList] = useState([]);
     // const [currentActiveBtn, setCurrentActiveBtn] = useState('vertex');
     const [playPauseStatus, setPlayPauseStatus] = useState("start") // start , running, pused ,restart
+    const [source, setSource] = useState(0);
     const [stack, setStack] = useState({
         pastStack: [],
         fetureStack: [],
@@ -33,6 +34,9 @@ function GraphShow() {
         },
         visited_edge: []
     })
+    const [nextCall, setNextCall] = useState(undefined)
+    //#endregion
+
     const resetStack = () => {
         setStack({
             pastStack: [],
@@ -44,10 +48,12 @@ function GraphShow() {
         });
         setPlayPauseStatus("start")
     }
-    useEffect(()=>{
+    // when url chenges
+    useEffect(() => {
         resetStack()
-    },[location])
-    const [source, setSource] = useState(0)
+    }, [location])
+
+    //#region Graph chenge
     function makeGraphUndirected() {
         if (GraphDetails.Directed_graph == "false") {
             let edgeList_temp = [...edgeList];
@@ -90,7 +96,9 @@ function GraphShow() {
         }
         console.log(currentGraph, "currentGraph");
     }, [currentGraph])
+    //#endregion
 
+    //#region Graph Traversal Algo
     function bfs(graph, start = 0) {
         if (start == undefined || start == null) {
             alert("please type source")
@@ -154,26 +162,118 @@ function GraphShow() {
 
         return fetureStack_temp;
     }
-    console.log(stack, "dfafasd");
-    const [nextCall, setNextCall] = useState(undefined)
-    function runAlgo(params) {
-        // resetStack()
-        if (location.pathname=="/bfs") {
-            bfs(currentGraph?.adjacent_matrix, source);
-        }else if (location.pathname=="/dfs") {
-            dfs(currentGraph?.adjacent_matrix, source);
+    //#endregion
+    //#region Minimal Spanning Tree (MST)
+    function prims(graph) {
+        function findMinKeyVertex(key, visited) {
+            let minKey = Infinity;
+            let minKeyVertex = -1;
+
+            for (let v = 0; v < key.length; v++) {
+                if (!visited[v] && key[v] < minKey) {
+                    minKey = key[v];
+                    minKeyVertex = v;
+                }
+            }
+
+            return minKeyVertex;
         }
 
 
-        return setNextCall(true)
+
+
+        const numVertices = graph.length;
+        const visited = new Array(numVertices).fill(false);
+        const key = new Array(numVertices).fill(Infinity);
+        const parent = new Array(numVertices).fill(null);
+
+        key[0] = 0;
+        parent[0] = -1;
+
+        for (let count = 0; count < numVertices - 1; count++) {
+            const minKeyVertex = findMinKeyVertex(key, visited);
+            visited[minKeyVertex] = true;
+
+            const neighbors = graph[minKeyVertex];
+            for (let i = 0; i < neighbors.length; i++) {
+                const [neighborVertex, weight] = neighbors[i];
+                if (!visited[neighborVertex] && weight < key[neighborVertex]) {
+                    parent[neighborVertex] = minKeyVertex;
+                    key[neighborVertex] = weight;
+                }
+            }
+        }
+
+        console.log(parent,"kkkkkkkk");
+        console.log(key,"kkkkkkkk");
+        console.log(visited,"kkkkkkkk");
+        return parent;
     }
+
+    // function prims(graph) {
+    //     // Initialize the minimum spanning tree.
+    //     const mst = [];
+      
+    //     // Initialize the set of visited nodes.
+    //     const visited = new Set();
+      
+    //     // Start at any node.
+    //     let currentNode = 0;
+      
+    //     // While there are still nodes to visit:
+    //     while (visited.size !== graph.length) {
+      
+    //       // Find the edge with the lowest weight that connects a visited node to
+    //       // an unvisited node.
+    //       let lowestWeightEdge = null;
+    //       for (const [v, w] of graph[currentNode]) {
+    //         if (!visited.has(v)) {
+    //           if (lowestWeightEdge === null || w < lowestWeightEdge?.weight) {
+    //             lowestWeightEdge = {
+    //               node: v,
+    //               weight: w
+    //             };
+    //           }
+    //         }
+    //       }
+      
+    //       // Add the edge to the minimum spanning tree.
+    //       mst.push(lowestWeightEdge);
+      
+    //       // Mark the node as visited.
+    //       visited.add(lowestWeightEdge?.node);
+      
+    //       // Update the current node.
+    //       currentNode = lowestWeightEdge?.node;
+    //     }
+    //   console.log(mst ,"kkkkkkkk");
+    //     return mst;
+    //   }
+    //#endregion
+    //#region shortest path find
+    
+    //#endregion
+
+    function runAlgo(params) {
+        // resetStack()
+        if (location.pathname == "/bfs") {
+            bfs(currentGraph?.adjacent_matrix, source);
+        } else if (location.pathname == "/dfs") {
+            dfs(currentGraph?.adjacent_matrix, source);
+        } else if (location.pathname == "/prim") {
+            prims(currentGraph?.adjacent_matrix, source);
+        }
+
+
+        // return setNextCall(true)
+    }
+    //#region  Play Pause Next Prev Func
     useEffect(() => {
         if (nextCall !== undefined) {
             nextStep()
             console.log(stack, `hello_`);
         }
     }, [nextCall])
-
 
     async function nextStep(params) {
         await new Promise(resolve => setTimeout(resolve, 1500));
@@ -217,7 +317,6 @@ function GraphShow() {
         }
     }
 
-
     async function prevStep(params) {
         await new Promise(resolve => setTimeout(resolve, 1500));
         // return if feature stack is emty
@@ -250,13 +349,13 @@ function GraphShow() {
 
 
     }
+    //#endregion
 
 
 
 
 
-
-    // play next prev btn click func
+    //#region play next prev btn click func
     const next = () => {
         if (playPauseStatus == "start") {
             setPlayPauseStatus("paused")
@@ -280,7 +379,7 @@ function GraphShow() {
     const prev = () => {
         prevStep()
     }
-
+    //#endregion
 
     return (
         <>
