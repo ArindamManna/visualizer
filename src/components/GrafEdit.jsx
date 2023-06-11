@@ -8,9 +8,9 @@ import { updateGlobalState } from '../Redux/GlobalSlice';
 
 function GrafEdit() {
 
-    const { currentGraph ,savedGraphList} = useSelector((state) => {
-        const { currentGraph ,savedGraphList} = state.GlobalSlice;
-        return { currentGraph,savedGraphList }
+    const { currentGraph ,savedGraphList,isEditGraph,editGraphIndex} = useSelector((state) => {
+        const { currentGraph ,savedGraphList,isEditGraph,editGraphIndex} = state.GlobalSlice;
+        return { currentGraph,savedGraphList,isEditGraph,editGraphIndex }
     })
     const dispatch=useDispatch()
 
@@ -168,7 +168,7 @@ function GrafEdit() {
             // vertexList_temp[i].x -= smallest_x;
             // vertexList_temp[i].y -= smallest_y;
         });
-debugger
+// debugger
         let adjacent_matrix=new Array(vertexList.length)
         // adjacent_matrix.fill([])
         edgeList.forEach((edge)=>{
@@ -181,12 +181,30 @@ debugger
         })
        
         let graph = {...GraphDetails, edgeList, vertexList: vertexList_temp ,adjacent_matrix,};
+         
+        let savedGraphList_temp;
+        if (isEditGraph) {
+            savedGraphList_temp=[...savedGraphList];
+            savedGraphList_temp[editGraphIndex]=graph;
+        } else {
+            
+            savedGraphList_temp=[...savedGraphList,graph];
+        }
+
+
+
+
+
+
         //#region  backend api change
-        
+        let isEditGraph_temp=isEditGraph;
         dispatch(updateGlobalState({
-            savedGraphList:[...savedGraphList,graph]
+            savedGraphList:savedGraphList_temp,
+            currentGraph:null,
+            isEditGraph:false
         }))
-        localStorage.setItem('savedGraphList', JSON.stringify([...savedGraphList,graph]))
+        localStorage.setItem('savedGraphList', JSON.stringify(savedGraphList_temp))
+        alert(`Graph is succesfully ${isEditGraph_temp?"edited":"added"}`)
         //#endregion
     }
 
@@ -268,7 +286,7 @@ debugger
                     </div>
                     <div className="right">
                         <button onClick={saveGraph} class="bg-indigo-500 space-x-3 items-center flex justify-center text-lg font-medium  hover:bg-indigo-600 rounded-md px-3 py-2 text-white w-full  disabled:bg-indigo-300 disabled:cursor-not-allowed">
-                            <span>Save</span>
+                            <span>{isEditGraph?"Save":"Add"}</span>
                         </button>
                     </div>
                 </div>

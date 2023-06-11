@@ -9,7 +9,7 @@ export const GlobalSlice = createSlice({
     isOpengraphListPopup: false,
     savedGraphList: localStorage.getItem('savedGraphList') ? JSON.parse(localStorage.getItem('savedGraphList')) : [],
     currentGraph: null,
-
+    isEditGraph:false,
     // pastStack: [],
     // fetureStack: [],
     // currentStatus:{
