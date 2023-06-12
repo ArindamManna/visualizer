@@ -4,18 +4,21 @@ import { useLocation } from 'react-router-dom';
 
 function ResultBoard({ stack }) {
     const location = useLocation()
-    const { pastStack, fetureStack, currentStatus, visited_edge } = stack ? stack : {};
-    const [currentAlgo,setCurrentAlgo]=useState("")
-    useEffect(()=>{
-        if (location?.pathname=="/bfs") {
+    const { pastStack, fetureStack, currentStatus, visited_edge,source } = stack ? stack : {};
+    const {distances, minDistancePaths}=pastStack?.[pastStack?.length-1]?pastStack[pastStack?.length-1]:{}
+    const [currentAlgo, setCurrentAlgo] = useState("")
+    useEffect(() => {
+        if (location?.pathname == "/bfs") {
             setCurrentAlgo("bfs")
-        }else if (location?.pathname=="/dfs") {
+        } else if (location?.pathname == "/dfs") {
             setCurrentAlgo("dfs")
+        } else if (location?.pathname == "/dijkstra") {
+            setCurrentAlgo("dijkstra")
         }
-    },[location])
+    }, [location])
 
 
-    const { title, description, algo, timeCom, timeComDes } = graphStatic?.[currentAlgo]?graphStatic?.[currentAlgo]:{};
+    const { title, description, algo, timeCom, timeComDes } = graphStatic?.[currentAlgo] ? graphStatic?.[currentAlgo] : {};
     return (
         <>
             <div className='h-1/2 w-full p-4 flex flex-col bg-white border border-gray-300 rounded-lg shadow-lg  py-3 relative overflow-hidden'>
@@ -53,7 +56,7 @@ function ResultBoard({ stack }) {
                     <div className='w-1/2 h-full overflow-auto pl-4'>
                         {
                             // bfs or dfs
-                            (currentAlgo=="bfs" || currentAlgo=="dfs") &&
+                            (currentAlgo == "bfs" || currentAlgo == "dfs") &&
                             <p className='mb-1'>
                                 <span className='font-bold'>
                                     Output:
@@ -64,6 +67,44 @@ function ResultBoard({ stack }) {
                                     })}
                                 </span>
                             </p>
+                        }
+                        {
+                            (currentAlgo == "dijkstra") &&
+                            <div>
+
+
+                                <p className='mb-1'>
+                                    <span className='font-bold'>
+                                        Source:
+                                    </span>
+                                    <span className='text-blue-400'>
+                                        {" "}
+                                    </span>
+                                </p>
+
+                                {distances?.map((item, i) => {
+                                    return <div key={i}>
+                                        <p className='mb-1'>
+                                            <span className='font-bold'>
+                                                Min Distance of {i}:
+                                            </span>
+                                            <span className='text-blue-400'>
+                                                {" "} {item}
+                                            </span>
+                                        </p>
+                                        <p className='mb-1'>
+                                            <span className='font-bold'>
+                                                Path to {i}:
+                                            </span>
+                                            <span className='text-blue-400'>
+                                                {" "}{source} {minDistancePaths?.[i]?.map(([u,v]) => {
+                                                    return `, ${v}`
+                                                })}
+                                            </span>
+                                        </p>
+                                    </div>
+                                })}
+                            </div>
                         }
 
                     </div>

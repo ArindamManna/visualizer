@@ -204,25 +204,25 @@ function GraphShow() {
             }
         }
 
-        console.log(parent,"kkkkkkkk");
-        console.log(key,"kkkkkkkk");
-        console.log(visited,"kkkkkkkk");
+        console.log(parent, "kkkkkkkk");
+        console.log(key, "kkkkkkkk");
+        console.log(visited, "kkkkkkkk");
         return parent;
     }
 
     // function prims(graph) {
     //     // Initialize the minimum spanning tree.
     //     const mst = [];
-      
+
     //     // Initialize the set of visited nodes.
     //     const visited = new Set();
-      
+
     //     // Start at any node.
     //     let currentNode = 0;
-      
+
     //     // While there are still nodes to visit:
     //     while (visited.size !== graph.length) {
-      
+
     //       // Find the edge with the lowest weight that connects a visited node to
     //       // an unvisited node.
     //       let lowestWeightEdge = null;
@@ -236,13 +236,13 @@ function GraphShow() {
     //           }
     //         }
     //       }
-      
+
     //       // Add the edge to the minimum spanning tree.
     //       mst.push(lowestWeightEdge);
-      
+
     //       // Mark the node as visited.
     //       visited.add(lowestWeightEdge?.node);
-      
+
     //       // Update the current node.
     //       currentNode = lowestWeightEdge?.node;
     //     }
@@ -251,9 +251,63 @@ function GraphShow() {
     //   }
     //#endregion
     //#region shortest path find
-    
-    //#endregion
+    function dijkstra(graph, source = 0) {
 
+        function findMinDistanceVertex(distances, visited) {
+            let minDistance = Infinity;
+            let minDistanceVertex = -1;
+
+            for (let v = 0; v < distances.length; v++) {
+                if (!visited.includes(`${v}`) && distances[v] < minDistance) {
+                    minDistance = distances[v];
+                    minDistanceVertex = v;
+                }
+            }
+
+            return minDistanceVertex;
+        }
+
+
+
+        const numVertices = graph.length;
+        const distances = new Array(numVertices).fill(Infinity);
+        const visited = [];
+        let visited_temp = [];
+        // const visited = new Array(numVertices).fill(false);
+        // inhitilize feture stack
+        let visited_edge = []
+        let fetureStack_temp = [];
+        let minDistancePaths=new Array(numVertices).fill([])
+
+        distances[source] = 0;
+
+        for (let i = 0; i < numVertices - 1; i++) {
+            const minDistanceVertex = findMinDistanceVertex(distances, visited);
+            // visited[minDistanceVertex] = true;
+            visited.push(`${minDistanceVertex}`);
+
+            const neighbors = graph[minDistanceVertex];
+            for (let j = 0; j < neighbors.length; j++) {
+                const [neighborVertex, weight] = neighbors[j];
+                const distance = distances[minDistanceVertex] + Number(weight);
+                if (distance < distances[neighborVertex]) {
+                    distances[neighborVertex] = distance;
+                    minDistancePaths[neighborVertex]=[...minDistancePaths[minDistanceVertex],[`${minDistanceVertex}`, `${neighborVertex}`]]
+                    visited_temp = [...visited_temp, `${neighborVertex}`]
+                    fetureStack_temp = [...fetureStack_temp, { visited: [...visited_temp],minDistancePaths:[...minDistancePaths],distances:[...distances] }];
+                    visited_edge.push([`${minDistanceVertex}`, `${neighborVertex}`])
+
+                }
+
+            }
+        }
+
+        setStack(prev => ({ fetureStack: fetureStack_temp, currentStatus: {}, visited_edge, pastStack: [],source }))
+        console.log(distances, "sdsss");
+        return distances;
+    }
+    //#endregion
+    console.log(stack, "fsfdsfs");
     function runAlgo(params) {
         // resetStack()
         if (location.pathname == "/bfs") {
@@ -262,10 +316,12 @@ function GraphShow() {
             dfs(currentGraph?.adjacent_matrix, source);
         } else if (location.pathname == "/prim") {
             prims(currentGraph?.adjacent_matrix, source);
+        } else if (location.pathname == "/dijkstra") {
+            dijkstra(currentGraph?.adjacent_matrix, source);
         }
 
 
-        // return setNextCall(true)
+        return setNextCall(true)
     }
     //#region  Play Pause Next Prev Func
     useEffect(() => {
