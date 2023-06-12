@@ -2,11 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 @keyframes arrowForward {
-  from {
+  0% {
     background: linear-gradient(to right, #ef4444 0%, black 0%);
+    color: #000000;
   }
-  to {
+  100% {
     background: linear-gradient(to right, #ef4444 100%, black 100%);
+    color: #ef4444;
   }
 }
 .arrowForward {

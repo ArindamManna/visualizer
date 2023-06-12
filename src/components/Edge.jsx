@@ -93,7 +93,7 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
 
             }}>
                 <div 
-                className={` line w-full bg-black   ${currentEdge?.[0]==u && currentEdge?.[1]==v ? "arrowForward": ""} ${isEdgeVisited?isEdgeNotUsed?"bg-gray-300":     "bg-blue-500":""}`} 
+                className={` line w-full bg-black   ${currentEdge?.[0]==u && currentEdge?.[1]==v ? "arrowForward": ""} ${isEdgeVisited?isEdgeNotUsed?"bg-gray-300 text-gray-300":     "bg-blue-500 text-blue-500":""}`} 
                 // className=' line w-full ' 
                 >
                     {w &&

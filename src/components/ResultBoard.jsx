@@ -4,8 +4,8 @@ import { useLocation } from 'react-router-dom';
 
 function ResultBoard({ stack }) {
     const location = useLocation()
-    const { pastStack, fetureStack, currentStatus, visited_edge,source } = stack ? stack : {};
-    const {distances, minDistancePaths}=pastStack?.[pastStack?.length-1]?pastStack[pastStack?.length-1]:{}
+    const { pastStack, fetureStack, currentStatus, visited_edge, source } = stack ? stack : {};
+    const { distances, minDistancePaths } = pastStack?.[pastStack?.length - 1] ? pastStack[pastStack?.length - 1] : {}
     const [currentAlgo, setCurrentAlgo] = useState("")
     useEffect(() => {
         if (location?.pathname == "/bfs") {
@@ -70,41 +70,47 @@ function ResultBoard({ stack }) {
                         }
                         {
                             (currentAlgo == "dijkstra") &&
-                            <div>
-
-
+                            <div className='w-full '>
                                 <p className='mb-1'>
                                     <span className='font-bold'>
                                         Source:
                                     </span>
                                     <span className='text-blue-400'>
-                                        {" "}
+                                        {" "}{source}
                                     </span>
                                 </p>
+                                <div className='w-full'>
 
-                                {distances?.map((item, i) => {
-                                    return <div key={i}>
-                                        <p className='mb-1'>
-                                            <span className='font-bold'>
-                                                Min Distance of {i}:
-                                            </span>
-                                            <span className='text-blue-400'>
-                                                {" "} {item}
-                                            </span>
-                                        </p>
-                                        <p className='mb-1'>
-                                            <span className='font-bold'>
-                                                Path to {i}:
-                                            </span>
-                                            <span className='text-blue-400'>
-                                                {" "}{source} {minDistancePaths?.[i]?.map(([u,v]) => {
+                                    <div className='flex w-full border rounded '>
+                                        <div className='w-2/12 border-r p-2 flex items-center justify-center'>
+                                            Vertex
+                                        </div>
+                                        <div className='w-3/12 border-r p-2 flex items-center justify-center'>
+                                            Min Distance
+                                        </div>
+                                        <div className='w-7/12 p-2 flex items-center justify-center'>
+                                            Path
+                                        </div>
+                                    </div>
+
+                                    {distances?.map((dis, i) => {
+                                        return <div key={i} className='flex w-full border rounded '>
+                                            <div className='w-2/12 border-r p-2 flex items-center justify-center'>
+                                                {i}
+                                            </div>
+                                            <div className='w-3/12 border-r p-2 flex items-center justify-center'>
+                                                {dis}
+                                            </div>
+                                            <div className='w-7/12 p-2 flex items-center justify-center'>
+                                                {source} {minDistancePaths?.[i]?.map(([u, v]) => {
                                                     return `, ${v}`
                                                 })}
-                                            </span>
-                                        </p>
-                                    </div>
-                                })}
+                                            </div>
+                                        </div>
+                                    })}
+                                </div>
                             </div>
+                            
                         }
 
                     </div>
