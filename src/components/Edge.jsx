@@ -22,9 +22,18 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
     useEffect(()=>{
         // debugger
         let temp=false;
-        for (let i = 0; i < currentStatus?.visited?.length-1; i++) {
+        let loopCt;
+        // =currentStatus?.visited?.length;
+        if (Object.keys(currentStatus)?.length==0) {
+            debugger
+            loopCt=pastStack?.[pastStack?.length-1]?.visited?.length;
+            console.log(loopCt,"hhhhhh");
+        }else{
+            loopCt=currentStatus?.visited?.length;
+        }
+        for (let i = 0; i < loopCt; i++) {
             let item=visited_edge[i]
-            if (item[0]==u && item[1]==v) {
+            if (item?.[0]==u && item?.[1]==v) {
                 // setIsEdgeVisited(true)
                 temp=true;
                 break

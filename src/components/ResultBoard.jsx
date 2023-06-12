@@ -5,6 +5,13 @@ import { useLocation } from 'react-router-dom';
 function ResultBoard({ stack }) {
     const location = useLocation()
     const { pastStack, fetureStack, currentStatus, visited_edge, source } = stack ? stack : {};
+    let visited_till_now;
+    if (Object.keys(currentStatus)?.length == 0) {
+        visited_till_now = pastStack?.[pastStack?.length - 1]?.visited;
+    } else {
+        visited_till_now = currentStatus?.visited;
+    }
+
     const { distances, minDistancePaths } = pastStack?.[pastStack?.length - 1] ? pastStack[pastStack?.length - 1] : {}
     const [currentAlgo, setCurrentAlgo] = useState("")
     useEffect(() => {
@@ -62,7 +69,7 @@ function ResultBoard({ stack }) {
                                     Output:
                                 </span>
                                 <span className='text-blue-400'>
-                                    {" "} {currentStatus?.visited?.map((vertex, i, arr) => {
+                                    {" "} {visited_till_now?.map((vertex, i, arr) => {
                                         return `${vertex}${i == arr.length - 1 ? "" : ","} `
                                     })}
                                 </span>
@@ -110,7 +117,7 @@ function ResultBoard({ stack }) {
                                     })}
                                 </div>
                             </div>
-                            
+
                         }
 
                     </div>
