@@ -352,18 +352,19 @@ function GraphShow() {
         }
         fetureStack_temp.shift();
 
+        let currentStatus_temp= stack?.fetureStack[0]?stack?.fetureStack[0]:{};
         //    update stack 
         setStack(prev => ({
             ...prev,
             fetureStack: fetureStack_temp,
             pastStack: pastStack_temp,
-            currentStatus: stack?.fetureStack[0]?stack?.fetureStack[0]:{}
+            currentStatus: currentStatus_temp
         }))
 
 
         // recursion call
         if (playPauseStatus == "running") {
-            if (fetureStack_temp?.length != 0 ||  Object.keys(stack?.currentStatus)?.length!=0 ) {
+            if (fetureStack_temp?.length != 0 ||  Object.keys(currentStatus_temp)?.length!=0 ) {
                 // return nextCall(i+1) //just for console pass value
                 setNextCall(!nextCall)
             } else {
