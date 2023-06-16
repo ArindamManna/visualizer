@@ -7,7 +7,7 @@ function Vertex({ data, EdgeCreateEnd, EdgeCreateStart, deleteVertex, stack }) {
     //  = currentStatus;
     let currentEdge;
     //  = visited_edge?.[currentStatus?.visited?.length - 1]
-    if (Object.keys(currentStatus)?.length == 0) {
+    if (currentStatus&& Object.keys(currentStatus)?.length == 0) {
         visited_till_now = pastStack?.[pastStack?.length-1]?.visited;
         // currentEdge = visited_edge?.[pastStack?.[pastStack?.length-1]?.visited?.length - 1]
     } else {

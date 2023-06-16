@@ -24,8 +24,7 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
         let temp=false;
         let loopCt;
         // =currentStatus?.visited?.length;
-        if (Object.keys(currentStatus)?.length==0) {
-            debugger
+        if (currentStatus && Object.keys(currentStatus)?.length==0) {
             loopCt=pastStack?.[pastStack?.length-1]?.visited?.length;
             console.log(loopCt,"hhhhhh");
         }else{

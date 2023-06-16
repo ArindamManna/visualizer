@@ -5,12 +5,17 @@ import { useLocation } from 'react-router-dom';
 function ResultBoard({ stack }) {
     const location = useLocation()
     const { pastStack, fetureStack, currentStatus, visited_edge, source } = stack ? stack : {};
+    
     let visited_till_now;
+    let key;
     if (Object.keys(currentStatus)?.length == 0) {
         visited_till_now = pastStack?.[pastStack?.length - 1]?.visited;
+        key = pastStack?.[pastStack?.length - 1]?.key;
     } else {
         visited_till_now = currentStatus?.visited;
+        key = currentStatus?.key;
     }
+    
 
     const { distances, minDistancePaths } = pastStack?.[pastStack?.length - 1] ? pastStack[pastStack?.length - 1] : {}
     const [currentAlgo, setCurrentAlgo] = useState("")
@@ -19,10 +24,24 @@ function ResultBoard({ stack }) {
             setCurrentAlgo("bfs")
         } else if (location?.pathname == "/dfs") {
             setCurrentAlgo("dfs")
+        }else if (location.pathname == "/prim") {
+            setCurrentAlgo("prim")
         } else if (location?.pathname == "/dijkstra") {
             setCurrentAlgo("dijkstra")
         }
     }, [location])
+
+    const [minSpanningTreeWeight,setMinSpanningTreeWeight]=useState(Infinity)
+    useEffect(()=>{
+        if (Array.isArray(visited_till_now) && Array.isArray(key)) {
+            // debugger
+            let weight=0;
+            visited_till_now?.forEach((vertex,i)=>{
+                weight+=Number( key[vertex])
+            })
+            setMinSpanningTreeWeight(weight)
+        }
+    },[visited_till_now,key])
 
 
     const { title, description, algo, timeCom, timeComDes } = graphStatic?.[currentAlgo] ? graphStatic?.[currentAlgo] : {};
@@ -61,6 +80,32 @@ function ResultBoard({ stack }) {
                         }
                     </div>
                     <div className='w-1/2 h-full overflow-auto pl-4'>
+                        {
+                            // prim
+                            (currentAlgo == "prim") &&
+                            <>
+
+
+                                <p className='mb-1'>
+                                    <span className='font-bold'>
+                                        Min Spanning Tree:
+                                    </span>
+                                    <span className='text-blue-400'>
+                                        {" "} {visited_till_now?.map((vertex, i, arr) => {
+                                            return `${vertex}${i == arr.length - 1 ? "" : ","} `
+                                        })}
+                                    </span>
+                                </p>
+                                <p className='mb-1'>
+                                    <span className='font-bold'>
+                                        Total Weight:
+                                    </span>
+                                    <span className='text-blue-400'>
+                                        {" "} {minSpanningTreeWeight}
+                                    </span>
+                                </p>
+                            </>
+                        }
                         {
                             // bfs or dfs
                             (currentAlgo == "bfs" || currentAlgo == "dfs") &&

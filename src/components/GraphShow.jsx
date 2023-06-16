@@ -164,7 +164,7 @@ function GraphShow() {
     }
     //#endregion
     //#region Minimal Spanning Tree (MST)
-    function prims(graph) {
+    function prims(graph, source = 0) {
         function findMinKeyVertex(key, visited) {
             let minKey = Infinity;
             let minKeyVertex = -1;
@@ -186,69 +186,50 @@ function GraphShow() {
         const visited = new Array(numVertices).fill(false);
         const key = new Array(numVertices).fill(Infinity);
         const parent = new Array(numVertices).fill(null);
+        let connectWith = new Array(numVertices).fill(null);
+        let visited_till_now=[]
 
-        key[0] = 0;
-        parent[0] = -1;
+        key[source] = 0;
+        connectWith[source] = 0;
+        parent[source] = -1;
 
-        for (let count = 0; count < numVertices - 1; count++) {
+        let visited_temp = [];
+        let visited_edge = []
+        // visited.push(`${start}`);
+        // inhitilize feture stack
+        let fetureStack_temp = [{ visited: [...visited_temp] }];
+
+        for (let count = 0; count < numVertices ; count++) {
             const minKeyVertex = findMinKeyVertex(key, visited);
             visited[minKeyVertex] = true;
+            visited_till_now.push(minKeyVertex)
+            visited_temp.push(`${minKeyVertex}`);
+            visited_edge.push([`${connectWith[minKeyVertex]}`, `${minKeyVertex}`])
+            //   update feture stack
+            fetureStack_temp = [...fetureStack_temp, { visited: [...visited_temp] ,visited_till_now:[...visited_till_now],key:[...key]}]
 
             const neighbors = graph[minKeyVertex];
             for (let i = 0; i < neighbors.length; i++) {
                 const [neighborVertex, weight] = neighbors[i];
-                if (!visited[neighborVertex] && weight < key[neighborVertex]) {
+                if (!visited[neighborVertex] && Number(weight) < key[neighborVertex]) {
                     parent[neighborVertex] = minKeyVertex;
-                    key[neighborVertex] = weight;
+                    key[neighborVertex] = Number(weight);
+                    connectWith[neighborVertex] = `${minKeyVertex}`
+
+
+
+
                 }
             }
         }
-
+        setStack(prev => ({ fetureStack: fetureStack_temp, currentStatus: {}, visited_edge, pastStack: [], source }))
         console.log(parent, "kkkkkkkk");
         console.log(key, "kkkkkkkk");
         console.log(visited, "kkkkkkkk");
         return parent;
     }
 
-    // function prims(graph) {
-    //     // Initialize the minimum spanning tree.
-    //     const mst = [];
 
-    //     // Initialize the set of visited nodes.
-    //     const visited = new Set();
-
-    //     // Start at any node.
-    //     let currentNode = 0;
-
-    //     // While there are still nodes to visit:
-    //     while (visited.size !== graph.length) {
-
-    //       // Find the edge with the lowest weight that connects a visited node to
-    //       // an unvisited node.
-    //       let lowestWeightEdge = null;
-    //       for (const [v, w] of graph[currentNode]) {
-    //         if (!visited.has(v)) {
-    //           if (lowestWeightEdge === null || w < lowestWeightEdge?.weight) {
-    //             lowestWeightEdge = {
-    //               node: v,
-    //               weight: w
-    //             };
-    //           }
-    //         }
-    //       }
-
-    //       // Add the edge to the minimum spanning tree.
-    //       mst.push(lowestWeightEdge);
-
-    //       // Mark the node as visited.
-    //       visited.add(lowestWeightEdge?.node);
-
-    //       // Update the current node.
-    //       currentNode = lowestWeightEdge?.node;
-    //     }
-    //   console.log(mst ,"kkkkkkkk");
-    //     return mst;
-    //   }
     //#endregion
     //#region shortest path find
     function dijkstra(graph, source = 0) {
@@ -277,7 +258,7 @@ function GraphShow() {
         // inhitilize feture stack
         let visited_edge = []
         let fetureStack_temp = [];
-        let minDistancePaths=new Array(numVertices).fill([])
+        let minDistancePaths = new Array(numVertices).fill([])
 
         distances[source] = 0;
 
@@ -292,9 +273,9 @@ function GraphShow() {
                 const distance = distances[minDistanceVertex] + Number(weight);
                 if (distance < distances[neighborVertex]) {
                     distances[neighborVertex] = distance;
-                    minDistancePaths[neighborVertex]=[...minDistancePaths[minDistanceVertex],[`${minDistanceVertex}`, `${neighborVertex}`]]
+                    minDistancePaths[neighborVertex] = [...minDistancePaths[minDistanceVertex], [`${minDistanceVertex}`, `${neighborVertex}`]]
                     visited_temp = [...visited_temp, `${neighborVertex}`]
-                    fetureStack_temp = [...fetureStack_temp, { visited: [...visited_temp],minDistancePaths:[...minDistancePaths],distances:[...distances] }];
+                    fetureStack_temp = [...fetureStack_temp, { visited: [...visited_temp], minDistancePaths: [...minDistancePaths], distances: [...distances] }];
                     visited_edge.push([`${minDistanceVertex}`, `${neighborVertex}`])
 
                 }
@@ -302,7 +283,7 @@ function GraphShow() {
             }
         }
 
-        setStack(prev => ({ fetureStack: fetureStack_temp, currentStatus: {}, visited_edge, pastStack: [],source }))
+        setStack(prev => ({ fetureStack: fetureStack_temp, currentStatus: {}, visited_edge, pastStack: [], source }))
         console.log(distances, "sdsss");
         return distances;
     }
@@ -334,7 +315,7 @@ function GraphShow() {
     async function nextStep(params) {
         await new Promise(resolve => setTimeout(resolve, 1500));
         // return if feature stack is emty
-        if (stack.fetureStack?.length == 0 && Object.keys(stack?.currentStatus)?.length==0) {
+        if (stack.fetureStack?.length == 0 && Object.keys(stack?.currentStatus)?.length == 0) {
             return
         }
 
@@ -352,7 +333,7 @@ function GraphShow() {
         }
         fetureStack_temp.shift();
 
-        let currentStatus_temp= stack?.fetureStack[0]?stack?.fetureStack[0]:{};
+        let currentStatus_temp = stack?.fetureStack[0] ? stack?.fetureStack[0] : {};
         //    update stack 
         setStack(prev => ({
             ...prev,
@@ -364,7 +345,7 @@ function GraphShow() {
 
         // recursion call
         if (playPauseStatus == "running") {
-            if (fetureStack_temp?.length != 0 ||  Object.keys(currentStatus_temp)?.length!=0 ) {
+            if (fetureStack_temp?.length != 0 || Object.keys(currentStatus_temp)?.length != 0) {
                 // return nextCall(i+1) //just for console pass value
                 setNextCall(!nextCall)
             } else {
