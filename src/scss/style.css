@@ -3,16 +3,20 @@
 @tailwind utilities;
 @keyframes arrowForward {
   0% {
-    background: linear-gradient(to right, #ef4444 0%, black 0%);
-    color: #000000;
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+  75% {
+    transform: scale(1, 1);
+    opacity: 1;
   }
   100% {
-    background: linear-gradient(to right, #ef4444 100%, black 100%);
-    color: #ef4444;
+    transform: scale(2, 10);
+    opacity: 0;
   }
 }
 .arrowForward {
-  animation: arrowForward 1500ms ease-out forwards;
+  animation: arrowForward 1000ms cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
 @keyframes vertexHighlight {}

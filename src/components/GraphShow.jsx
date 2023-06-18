@@ -319,8 +319,8 @@ function GraphShow() {
                 fetureStack_temp = [...fetureStack_temp, { visited: [...visited_temp], visited_till_now: [...visited_till_now],currentEdgeIndex:currentEdgeIndex++ }]
             }
         }
-        console.log(mst);
-        setStack(prev => ({ fetureStack: fetureStack_temp, currentStatus: {}, visited_edge, pastStack: [], source }))
+        console.log(mst,"fasdfsdf");
+        setStack(prev => ({ fetureStack: fetureStack_temp, currentStatus: {}, visited_edge:mst, pastStack: [], source }))
         return mst;
     }
 

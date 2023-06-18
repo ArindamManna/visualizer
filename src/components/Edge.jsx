@@ -20,7 +20,14 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
     const { u, v, v_temp, w, index } = data;
     const {pastStack, fetureStack, currentStatus,visited_edge}=stack?stack:{};
     const {distances, minDistancePaths}=pastStack?.[pastStack?.length-1]?pastStack[pastStack?.length-1]:{}
+    let {currentEdgeIndex}=currentStatus?currentStatus:{}
+    if (currentEdgeIndex==undefined) {
+        currentEdgeIndex=pastStack[pastStack?.length-1]?.currentEdgeIndex;
+    }
     let currentEdge=visited_edge?.[currentStatus?.visited?.length-1];
+    if (currentAlgo=="kruskal") {
+        currentEdge=visited_edge?.[currentEdgeIndex]
+    }
     const [isEdgeVisited,setIsEdgeVisited]=useState(false);
     const [isEdgeNotUsed,setIsEdgeNotUsed]=useState(false)
     useEffect(()=>{
@@ -28,10 +35,12 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
         let temp=false;
         let loopCt;
         // =currentStatus?.visited?.length;
-        if (currentStatus && Object.keys(currentStatus)?.length==0) {
+        if (currentAlgo=="kruskal" ) {
+            loopCt=currentEdgeIndex
+        }else if(currentStatus && Object.keys(currentStatus)?.length==0){
             loopCt=pastStack?.[pastStack?.length-1]?.visited?.length;
             console.log(loopCt,"hhhhhh");
-        }else{
+        } else{
             loopCt=currentStatus?.visited?.length;
         }
         for (let i = 0; i < loopCt; i++) {
@@ -68,6 +77,8 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
                 }
             }
             setIsEdgeNotUsed(isEdgeNotUsed_temp)
+        }else{
+            setIsEdgeNotUsed(false)
         }
     },[stack,currentAlgo])
     // console.log(currentEdge, u, v);
@@ -108,9 +119,13 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
 
             }}>
                 <div 
-                className={` line w-full bg-black   ${((currentEdge?.[0]==u && currentEdge?.[1]==v) || ((currentAlgo=="kruskal" || currentAlgo=="prim") && currentEdge?.[1]==u && currentEdge?.[0]==v) )       ? "arrowForward": ""} ${isEdgeVisited?isEdgeNotUsed?"bg-gray-300 text-gray-300":     "bg-blue-500 text-blue-500":""}`} 
+                className={` line w-full bg-black ${((currentEdge?.[0]==u && currentEdge?.[1]==v) || ((currentAlgo=="kruskal" || currentAlgo=="prim") && currentEdge?.[1]==u && currentEdge?.[0]==v) ) ?"bg-red-500 text-red-500":"" }  ${isEdgeVisited?isEdgeNotUsed?"bg-gray-300 text-gray-300":     "bg-blue-500 text-blue-500":""}`} 
                 // className=' line w-full ' 
                 >
+                    {((currentEdge?.[0]==u && currentEdge?.[1]==v) || ((currentAlgo=="kruskal" || currentAlgo=="prim") && currentEdge?.[1]==u && currentEdge?.[0]==v) )       ? 
+                    // "animate-ping": ""
+                         <span className='absolute h-full w-full top-0 left-0 z-50 bg-red-500 animate-ping rounded-full'></span>
+                   :"" }
                     {w &&
                         <span className={`weight absolute left-1/2 -translate-x-1/2 top-full mt-1 ${u_point?.x>v_point?.x?"rotate-180":""} `}>
                             {w}
