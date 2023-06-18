@@ -94,7 +94,6 @@ function GraphShow() {
         if (currentGraph) {
             setGraphDetails(currentGraph)
         }
-        console.log(currentGraph, "currentGraph");
     }, [currentGraph])
     //#endregion
 
@@ -187,7 +186,7 @@ function GraphShow() {
         const key = new Array(numVertices).fill(Infinity);
         const parent = new Array(numVertices).fill(null);
         let connectWith = new Array(numVertices).fill(null);
-        let visited_till_now=[]
+        let visited_till_now = []
 
         key[source] = 0;
         connectWith[source] = 0;
@@ -197,16 +196,17 @@ function GraphShow() {
         let visited_edge = []
         // visited.push(`${start}`);
         // inhitilize feture stack
-        let fetureStack_temp = [{ visited: [...visited_temp] }];
+        let fetureStack_temp = [];
+        // let fetureStack_temp = [{ visited: [...visited_temp] }];
 
-        for (let count = 0; count < numVertices ; count++) {
+        for (let count = 0; count < numVertices; count++) {
             const minKeyVertex = findMinKeyVertex(key, visited);
             visited[minKeyVertex] = true;
             visited_till_now.push(minKeyVertex)
             visited_temp.push(`${minKeyVertex}`);
             visited_edge.push([`${connectWith[minKeyVertex]}`, `${minKeyVertex}`])
             //   update feture stack
-            fetureStack_temp = [...fetureStack_temp, { visited: [...visited_temp] ,visited_till_now:[...visited_till_now],key:[...key]}]
+            fetureStack_temp = [...fetureStack_temp, { visited: [...visited_temp], visited_till_now: [...visited_till_now], key: [...key] }]
 
             const neighbors = graph[minKeyVertex];
             for (let i = 0; i < neighbors.length; i++) {
@@ -227,6 +227,101 @@ function GraphShow() {
         console.log(key, "kkkkkkkk");
         console.log(visited, "kkkkkkkk");
         return parent;
+    }
+
+
+    function kruskal(graph) {
+        class UnionFind {
+            constructor(size) {
+                this.parent = new Array(size);
+                this.rank = new Array(size);
+
+                for (let i = 0; i < size; i++) {
+                    this.parent[i] = i;
+                    this.rank[i] = 0;
+                }
+            }
+
+            find(x) {
+                if (this.parent[x] !== x) {
+                    this.parent[x] = this.find(this.parent[x]);
+                }
+
+                return this.parent[x];
+            }
+
+            union(x, y) {
+                const rootX = this.find(x);
+                const rootY = this.find(y);
+
+                if (rootX !== rootY) {
+                    if (this.rank[rootX] < this.rank[rootY]) {
+                        this.parent[rootX] = rootY;
+                    } else if (this.rank[rootX] > this.rank[rootY]) {
+                        this.parent[rootY] = rootX;
+                    } else {
+                        this.parent[rootY] = rootX;
+                        this.rank[rootX]++;
+                    }
+                }
+            }
+        }
+        const numVertices = graph.length;
+        const edges = [];
+
+        // Collect all edges from the graph
+        for (let u = 0; u < numVertices; u++) {
+            const neighbors = graph[u];
+            for (let i = 0; i < neighbors.length; i++) {
+                const [v, weight] = neighbors[i];
+                edges.push([u, v, weight]);
+            }
+        }
+
+        // Sort the edges by weight in non-decreasing order
+        edges.sort((a, b) => a[2] - b[2]);
+
+        const mst = [];
+        const unionFind = new UnionFind(numVertices);
+
+
+
+        // define stack
+        let visited_till_now = []
+        let visited_temp = [];
+        let visited_edge = []
+        // visited.push(`${start}`);
+        // inhitilize feture stack
+        let fetureStack_temp = [];
+        let currentEdgeIndex=0;
+        for (let i = 0; i < edges.length; i++) {
+            const [u, v, weight] = edges[i];
+
+            // Check if adding this edge creates a cycle
+            if (unionFind.find(u) !== unionFind.find(v)) {
+                unionFind.union(u, v);
+                mst.push([u, v, weight]);
+
+
+
+                if (!visited_temp?.includes(`${u}`)) {
+                    
+                    visited_temp.push(`${u}`)
+                }
+                if (!visited_temp?.includes(`${v}`)) {
+                    
+                    visited_temp.push(`${v}`)
+                }
+                // visited_temp.push(`${minKeyVertex}`);
+                visited_edge.push([`${u}`, `${v}`])
+                //   update feture stack
+                // fetureStack_temp = [...fetureStack_temp, { visited_till_now: [...visited_till_now] }]
+                fetureStack_temp = [...fetureStack_temp, { visited: [...visited_temp], visited_till_now: [...visited_till_now],currentEdgeIndex:currentEdgeIndex++ }]
+            }
+        }
+        console.log(mst);
+        setStack(prev => ({ fetureStack: fetureStack_temp, currentStatus: {}, visited_edge, pastStack: [], source }))
+        return mst;
     }
 
 
@@ -297,6 +392,8 @@ function GraphShow() {
             dfs(currentGraph?.adjacent_matrix, source);
         } else if (location.pathname == "/prim") {
             prims(currentGraph?.adjacent_matrix, source);
+        } else if (location.pathname == "/kruskal") {
+            kruskal(currentGraph?.adjacent_matrix, source);
         } else if (location.pathname == "/dijkstra") {
             dijkstra(currentGraph?.adjacent_matrix, source);
         }

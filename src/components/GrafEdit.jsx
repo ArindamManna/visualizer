@@ -170,6 +170,7 @@ function GrafEdit() {
         });
 // debugger
         let adjacent_matrix=new Array(vertexList.length)
+        let edgeListMst=[]
         // adjacent_matrix.fill([])
         edgeList.forEach((edge)=>{
             if (Array.isArray(adjacent_matrix[edge.u])) {
@@ -179,7 +180,7 @@ function GrafEdit() {
                 adjacent_matrix[edge.u]=[[edge.v,edge.w]]
             }
         })
-       
+
         let graph = {...GraphDetails, edgeList, vertexList: vertexList_temp ,adjacent_matrix,};
          
         let savedGraphList_temp;

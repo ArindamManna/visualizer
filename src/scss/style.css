@@ -15,6 +15,7 @@
   animation: arrowForward 1500ms ease-out forwards;
 }
 
+@keyframes vertexHighlight {}
 input {
   background: transparent;
 }

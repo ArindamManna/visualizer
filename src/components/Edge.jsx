@@ -9,6 +9,10 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
             setCurrentAlgo("bfs")
         } else if (location?.pathname == "/dfs") {
             setCurrentAlgo("dfs")
+        }else if (location.pathname == "/prim") {
+            setCurrentAlgo("prim")
+        } else if (location.pathname == "/kruskal") {
+            setCurrentAlgo("kruskal")
         } else if (location?.pathname == "/dijkstra") {
             setCurrentAlgo("dijkstra")
         }
@@ -36,7 +40,10 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
                 // setIsEdgeVisited(true)
                 temp=true;
                 break
-            }else{
+            }else if ((currentAlgo=="kruskal" || currentAlgo=="prim") && item?.[1]==u && item?.[0]==v) {
+                temp=true;
+                break
+            } else{
                 temp=false;
             }
             
@@ -101,7 +108,7 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
 
             }}>
                 <div 
-                className={` line w-full bg-black   ${currentEdge?.[0]==u && currentEdge?.[1]==v ? "arrowForward": ""} ${isEdgeVisited?isEdgeNotUsed?"bg-gray-300 text-gray-300":     "bg-blue-500 text-blue-500":""}`} 
+                className={` line w-full bg-black   ${((currentEdge?.[0]==u && currentEdge?.[1]==v) || ((currentAlgo=="kruskal" || currentAlgo=="prim") && currentEdge?.[1]==u && currentEdge?.[0]==v) )       ? "arrowForward": ""} ${isEdgeVisited?isEdgeNotUsed?"bg-gray-300 text-gray-300":     "bg-blue-500 text-blue-500":""}`} 
                 // className=' line w-full ' 
                 >
                     {w &&
