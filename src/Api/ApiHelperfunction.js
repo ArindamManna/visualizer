@@ -7,6 +7,8 @@ let hostname = window.location.hostname;
 if (hostname == "localhost" || hostname == "127.0.0.1") {
   // API_URL = "http://localhost:9000/api/v1/";
   API_URL = "http://localhost:4000/api/";
+}else{
+  API_URL = "https://visualizer-backend-beta.vercel.app/api/";
 }
 export { API_URL };
 
