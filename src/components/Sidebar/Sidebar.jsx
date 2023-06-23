@@ -56,12 +56,12 @@ function Sidebar() {
         {
             label: "Shortest Path",
             subMenu: [
-                {
-                    label: "Floyd's Algorithm",
-                    onclick: () => {
-                        navigate('/floyd')
-                    }
-                },
+                // {
+                //     label: "Floyd's Algorithm",
+                //     onclick: () => {
+                //         navigate('/floyd')
+                //     }
+                // },
                 {
                     label: "Dijkstra's Algorithm",
                     onclick: () => {
