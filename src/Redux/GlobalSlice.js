@@ -15,6 +15,7 @@ export const GlobalSlice = createSlice({
     // currentStatus:{
       
     // }
+    token:localStorage.getItem("token")
   },
 
   reducers: {
