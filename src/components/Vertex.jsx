@@ -19,7 +19,13 @@ function Vertex({ data, EdgeCreateEnd, EdgeCreateStart, deleteVertex, stack }) {
     }, [location])
     const { x, y, value, index } = data;
     const { pastStack, fetureStack, currentStatus, visited_edge } = stack ? stack : {};
-    const { currentEdgeIndex } = currentStatus ? currentStatus : pastStack[pastStack?.length - 1]
+    let currentEdgeIndex; 
+    if (currentStatus) {
+        currentEdgeIndex=currentStatus?.currentEdgeIndex;
+    }else if (pastStack?.[pastStack?.length - 1]) {
+        currentEdgeIndex=pastStack?.[pastStack?.length - 1]?.currentEdgeIndex;
+    }
+    //  = currentStatus ? currentStatus : pastStack?.[pastStack?.length - 1]
     let visited_till_now;
     //  = currentStatus;
     let currentEdge;

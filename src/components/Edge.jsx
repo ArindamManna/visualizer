@@ -22,7 +22,7 @@ function Edge({ data, vertexList, deleteEdge,stack }) {
     const {distances, minDistancePaths}=pastStack?.[pastStack?.length-1]?pastStack[pastStack?.length-1]:{}
     let {currentEdgeIndex}=currentStatus?currentStatus:{}
     if (currentEdgeIndex==undefined) {
-        currentEdgeIndex=pastStack[pastStack?.length-1]?.currentEdgeIndex;
+        currentEdgeIndex=pastStack?.[pastStack?.length-1]?.currentEdgeIndex;
     }
     let currentEdge=visited_edge?.[currentStatus?.visited?.length-1];
     if (currentAlgo=="kruskal") {

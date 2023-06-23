@@ -32,9 +32,10 @@ export const ApiHelperFunction = async (data) => {
     })
 
     .catch(function (error) {
+      console.log(error);
       let temp = error;
       responseData = temp.response.data;
-      alert("Something went wrong")
+      alert(error?.response?.data?.error)
     });
 
   return responseData?.data;

@@ -5,6 +5,7 @@ import { json } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import InputGraph from './Modal/InputGraph';
 import { updateGlobalState } from '../Redux/GlobalSlice';
+import { ApiHelperFunction } from '../Api/ApiHelperfunction';
 
 function GrafEdit() {
 
@@ -150,7 +151,7 @@ function GrafEdit() {
     }
     //#endregion 
 
-    function saveGraph() {
+    async function saveGraph() {
 
         let smallest_x = 0;
         let smallest_y = 0;
@@ -184,14 +185,26 @@ function GrafEdit() {
         let graph = {...GraphDetails, edgeList, vertexList: vertexList_temp ,adjacent_matrix,};
          
         let savedGraphList_temp;
+        let res;
         if (isEditGraph) {
             savedGraphList_temp=[...savedGraphList];
             savedGraphList_temp[editGraphIndex]=graph;
+
+           res= await ApiHelperFunction({ urlPath: "graph/update", method: "post", formData:{
+                index:editGraphIndex,
+                graph
+            } })
         } else {
-            
+           res=  await ApiHelperFunction({ urlPath: "graph/add", method: "post", formData:{
+                // index:editGraphIndex,
+                graph
+            } })
             savedGraphList_temp=[...savedGraphList,graph];
         }
-
+        if (res?.code!=200) {
+            // alert("Something went wrong")
+            return;
+        }
 
 
 

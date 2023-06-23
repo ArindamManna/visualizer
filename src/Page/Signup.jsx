@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ApiHelperFunction } from '../Api/ApiHelperfunction';
 import { useDispatch } from 'react-redux';
 import { updateGlobalState } from '../Redux/GlobalSlice';
@@ -7,7 +7,8 @@ import { updateGlobalState } from '../Redux/GlobalSlice';
 function Signup() {
 
   const [formData, setFormData] = useState({})
-  const  dispatch=useDispatch()
+  const  dispatch=useDispatch();
+  const navigate=useNavigate()
   const onchange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }))
@@ -20,6 +21,7 @@ function Signup() {
     if (res?.token) {
       localStorage.setItem("token",res?.token)
       dispatch(updateGlobalState({token:res?.token}))
+      navigate("/")
     }
   }
 
