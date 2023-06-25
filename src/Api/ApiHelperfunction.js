@@ -35,6 +35,10 @@ export const ApiHelperFunction = async (data) => {
 
     .catch(function (error) {
       console.log(error);
+      if (error?.code==401) {
+        localStorage.clear();
+        location.href="/"
+      }
       let temp = error;
       responseData = temp.response.data;
       alert(error?.response?.data?.error)

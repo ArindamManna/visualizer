@@ -26,6 +26,8 @@ function ResultBoard({ stack }) {
             setCurrentAlgo("dfs")
         }else if (location.pathname == "/prim") {
             setCurrentAlgo("prim")
+        }else if (location.pathname == "/kruskal") {
+            setCurrentAlgo("kruskal")
         } else if (location?.pathname == "/dijkstra") {
             setCurrentAlgo("dijkstra")
         }
