@@ -37,7 +37,7 @@ export const ApiHelperFunction = async (data) => {
       console.log(error);
       if (error?.code==401) {
         localStorage.clear();
-        location.href="/"
+        // location.href="/"
       }
       let temp = error;
       responseData = temp.response.data;
