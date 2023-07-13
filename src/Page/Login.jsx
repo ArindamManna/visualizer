@@ -38,7 +38,7 @@ function Login() {
             <button type='submit' className='text-white p-2 rounded-md bg-blue-400 hover:bg-blue-500'>Login</button>
           </div>
           <Link to={"/signup"} className='text-center text-purple-500 underline'>
-            Already have an account?
+            Don't have an account yet?
           </Link>
         </form>
       </div>

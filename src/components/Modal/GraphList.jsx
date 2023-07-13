@@ -53,6 +53,7 @@ function GraphList() {
             <div className=' py-2 shrink-0 absolute top-0 right-2 h-full w-36 z-50 graphlist'>
                 <div className='flex flex-col gap-4 p-4 border border-gray-300 h-full w-full overflow-auto bg-white rounded-md'>
                     <div onClick={() => {
+                        navigate("/")
                         dispatch(updateGlobalState({
                             currentGraph: {},
                             isOpengraphListPopup: false

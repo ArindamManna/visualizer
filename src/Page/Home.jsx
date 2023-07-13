@@ -12,23 +12,23 @@ function Home() {
         const { token } = state.GlobalSlice;
         return { token }
     })
-    const dispatch =useDispatch()
+    // const dispatch =useDispatch()
 
 
-    useEffect(()=>{
-        if (token) {
-            ApiHelperFunction({ urlPath: "user", method: "get" }).then((res)=>{
-                if (res?.email) {
-                    dispatch(updateGlobalState({
-                        name:res?.name,
-                        email:res?.email,
-                        savedGraphList:res?.graphList
-                    }))
-                }
+    // useEffect(()=>{
+    //     if (token) {
+    //         ApiHelperFunction({ urlPath: "user", method: "get" }).then((res)=>{
+    //             if (res?.email) {
+    //                 dispatch(updateGlobalState({
+    //                     name:res?.name,
+    //                     email:res?.email,
+    //                     savedGraphList:res?.graphList
+    //                 }))
+    //             }
                 
-            })
-        }
-    },[token])
+    //         })
+    //     }
+    // },[token])
     return (
         <>
             {token ? <Layout> <GrafEdit /></Layout> : <Login />}

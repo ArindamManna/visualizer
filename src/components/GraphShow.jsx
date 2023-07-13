@@ -293,7 +293,7 @@ function GraphShow() {
         // visited.push(`${start}`);
         // inhitilize feture stack
         let fetureStack_temp = [];
-        let currentEdgeIndex=0;
+        let currentEdgeIndex = 0;
         for (let i = 0; i < edges.length; i++) {
             const [u, v, weight] = edges[i];
 
@@ -305,22 +305,22 @@ function GraphShow() {
 
 
                 if (!visited_temp?.includes(`${u}`)) {
-                    
+
                     visited_temp.push(`${u}`)
                 }
                 if (!visited_temp?.includes(`${v}`)) {
-                    
+
                     visited_temp.push(`${v}`)
                 }
                 // visited_temp.push(`${minKeyVertex}`);
                 visited_edge.push([`${u}`, `${v}`])
                 //   update feture stack
                 // fetureStack_temp = [...fetureStack_temp, { visited_till_now: [...visited_till_now] }]
-                fetureStack_temp = [...fetureStack_temp, { visited: [...visited_temp], visited_till_now: [...visited_till_now],currentEdgeIndex:currentEdgeIndex++ }]
+                fetureStack_temp = [...fetureStack_temp, { visited: [...visited_temp], visited_till_now: [...visited_till_now], currentEdgeIndex: currentEdgeIndex++ }]
             }
         }
-        console.log(mst,"fasdfsdf");
-        setStack(prev => ({ fetureStack: fetureStack_temp, currentStatus: {}, visited_edge:mst, pastStack: [], source }))
+        console.log(mst, "fasdfsdf");
+        setStack(prev => ({ fetureStack: fetureStack_temp, currentStatus: {}, visited_edge: mst, pastStack: [], source }))
         return mst;
     }
 
@@ -553,35 +553,36 @@ function GraphShow() {
                             <option value="1">2</option>
                         </select> */}
 
+                        {(currentGraph?.edgeList && currentGraph?.vertexList) &&
+                            <div className='flex items-center gap-3 ml-4'>
+                                <button className='btn border-none' type='button' onClick={(e) => { prev(e) }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                                    </svg>
 
-                        <div className='flex items-center gap-3 ml-4'>
-                            <button className='btn border-none' type='button' onClick={(e) => { prev(e) }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                                </svg>
-
-                            </button>
-                            <button className='btn border-none' onClick={() => {
-                                playPause()
-                            }}>
-                                {playPauseStatus == "running" ? <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                </svg> : playPauseStatus == "restart" ? <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
-                                </svg> : <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-                                </svg>}
+                                </button>
+                                <button className='btn border-none' onClick={() => {
+                                    playPause()
+                                }}>
+                                    {playPauseStatus == "running" ? <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                    </svg> : playPauseStatus == "restart" ? <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                                    </svg> : <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                                    </svg>}
 
 
 
-                            </button>
-                            <button className='btn border-none' type='button' onClick={(e) => { next(e) }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3" />
-                                </svg>
+                                </button>
+                                <button className='btn border-none' type='button' onClick={(e) => { next(e) }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3" />
+                                    </svg>
 
-                            </button>
-                        </div>
+                                </button>
+                            </div>
+                        }
 
                         {/* <button className={`btn ${currentActiveBtn == "vertex" ? "btnActive" : ""}`} onClick={() => { setCurrentActiveBtn('vertex') }}>
                             Vertex

@@ -84,7 +84,7 @@ function ResultBoard({ stack }) {
                     <div className='w-1/2 h-full overflow-auto pl-4'>
                         {
                             // prim
-                            (currentAlgo == "prim") &&
+                            (currentAlgo == "prim" || currentAlgo=="kruskal" ) &&
                             <>
 
 

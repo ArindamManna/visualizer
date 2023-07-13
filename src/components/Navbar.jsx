@@ -1,16 +1,19 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateGlobalState } from '../Redux/GlobalSlice';
+import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const { name } = useSelector((state) => {
     const { name } = state.GlobalSlice;
     return { name }
   })
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const navigate=useNavigate()
   const logout = () => {
     localStorage.removeItem("token")
-    dispatch(updateGlobalState({token:null}))
+    dispatch(updateGlobalState({token:null}));
+    navigate("/")
   }
   return (
     <header className='w-full py-3 px-6 bg-white shadow-md flex justify-between items-center fixed top-0 left-0'>
