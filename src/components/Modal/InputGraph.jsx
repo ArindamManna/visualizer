@@ -11,7 +11,7 @@ function InputGraph({ data,doneFunc }) {
 
                     <p className='mb-1  text-base text-black'>Name</p>
                     <input type="text" name='name' value={GraphDetails?.name} placeholder='Graph Name' className='border-b mb-2 border-gray-400 py-1 px-2 text-sm text-gray-400' onChange={(e)=>{setGraphDetails(prev=>({...prev,[e.target.name]:e.target.value}))}} />
-                    <p className='mb-1  text-base text-black'>Type of Graph</p>
+                    {/* <p className='mb-1  text-base text-black'>Type of Graph</p>
                     <div className='flex items-center mb-1'>
                         <input type="radio" id="html" name="Weighted_graph" value="true" checked={GraphDetails.Weighted_graph=="true"} onChange={(e)=>{setGraphDetails(prev=>({...prev,[e.target.name]:e.target.value}))}} />
                         <label for="html" className='  text-sm text-gray-400 ml-2'>Weighted Graph</label>
@@ -19,7 +19,7 @@ function InputGraph({ data,doneFunc }) {
                     <div className='flex items-center mb-2'>
                         <input type="radio" id="html" name="Weighted_graph" value="false" checked={GraphDetails.Weighted_graph=="false"} onChange={(e)=>{setGraphDetails(prev=>({...prev,[e.target.name]:e.target.value}))}}  />
                         <label for="html" className='  text-sm text-gray-400 ml-2'>Non Weighted Graph</label>
-                    </div>
+                    </div> */}
                     <p className='mb-1  text-base text-black'>Type of Graph</p>
                     <div className='flex items-center mb-1'>
                         <input type="radio" id="html" name="Directed_graph" value="true" checked={GraphDetails.Directed_graph=="true"} onChange={(e)=>{setGraphDetails(prev=>({...prev,[e.target.name]:e.target.value}))}}  />
